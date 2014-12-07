@@ -14,3 +14,8 @@ shownotes/local_settings.py
 
 # user files
 media
+
+# other
+node_modules
+*.log
+users.json

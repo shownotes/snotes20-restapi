@@ -58,8 +58,7 @@ class EtherpadEditor(AbstractEditor):
             self.client.createGroupPad(groupID=group, padName=document.name)
         except EtherpadException as e:
             if str(e) == 'padName does already exist':
-                self.delete_document(document)
-                self.client.createGroupPad(groupID=group, padName=document.name)
+                self.set_document_text(document, '')
             else:
                 raise
 
