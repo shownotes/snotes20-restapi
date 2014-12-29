@@ -2,9 +2,8 @@
 
 ## Setup
 ```
-$ git clone git@github.com:SimonWaldherr/snotes20.git
-$ cd snotes20
-$ git checkout srv
+$ git clone git@github.com:shownotes/snotes20-restapi.git
+$ cd snotes20-restapi
 $ virtualenv venv
 $ . venv/bin/activate
 $ pip install -r requirements.txt
