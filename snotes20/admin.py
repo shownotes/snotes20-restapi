@@ -107,6 +107,10 @@ class EpisodeAdmin(ForeignKeyAutocompleteAdmin):
 class PodcasterAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(models.Shownoter)
+class ShownoterAdmin(admin.ModelAdmin):
+    search_fields = ('name', 'user__username')
+
 class RawPodcasterInline(admin.TabularInline):
     model = models.RawPodcaster
     extra = 0
