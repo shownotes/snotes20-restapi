@@ -36,7 +36,10 @@ class OSFTag(models.Model):
     description = models.CharField(max_length=200)
 
     def __str__(self):
-        return "#" + self.name + " (#" + self.short + ")"
+        if self.short:
+            return "#" + self.name + " (#" + self.short + ")"
+        else:
+            return "#" + self.name
 
     def absorb_tag_as_short(self, tag):
         self.short = tag.name

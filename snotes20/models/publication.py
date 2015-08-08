@@ -13,10 +13,13 @@ class Podcaster(models.Model):
     uri = models.URLField(unique=True, db_index=True)
     name = models.CharField(max_length=30)
 
+    def __str__(self):
+        return self.name
+
 
 class PubBase(models.Model):
     id = PostgreSQLUUIDField(primary_key=True, auto=True)
-    create_date = models.DateTimeField()
+    create_date = models.DateTimeField(auto_now_add=True)
     comment = models.CharField(max_length=250,  blank=True, null=True)
 
     class Meta:
@@ -31,6 +34,9 @@ class Publication(PubBase):
     preliminary = models.BooleanField(default=False)
     state = models.OneToOneField(DocumentState, related_name="publication")
     raw_state = models.OneToOneField(TextDocumentState, related_name="publication_raw")
+
+    def __str__(self):
+        return "{}".format(self.episode)
 
 
 class PublicationRequest(PubBase):

@@ -67,7 +67,7 @@ class Document(models.Model):
         except:
             epi = "no episode"
 
-        return "Document {} ({})".format(self.name, epi)
+        return "{}".format(self.name)
 
 @receiver(post_delete, sender=Document)
 def doc_post_delete_meta(sender, instance, *args, **kwargs):
@@ -84,6 +84,9 @@ CHAT_MSG_ISSUER_CHOICES = (
 class ChatMessageIssuer(models.Model):
     type = models.CharField(max_length=3, choices=CHAT_MSG_ISSUER_CHOICES)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
+
+    def __str__(self):
+        return "{}".format(self.user.username)
 
 
 class ChatMessage(models.Model):

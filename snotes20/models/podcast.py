@@ -55,7 +55,7 @@ class Podcast(Importable):
     mums = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="mum_podcasts")
 
     def __str__(self):
-        return "Podcast {} ({})".format(self.title, self.slug)
+        return "{} ({})".format(self.title, self.slug)
 
     @property
     def slug(self):
@@ -102,7 +102,7 @@ class Episode(Importable):
         )
 
     def __str__(self):
-        return "Episode {}-{} ({})".format(self.podcast.slug, self.number or 'NoNumberYet', self.date)
+        return "{}-{} ({})".format(self.podcast.slug, self.number or 'NoNumberYet', self.date)
 
     def save(self, *args, **kwargs):
         if not self.number:

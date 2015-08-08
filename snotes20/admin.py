@@ -32,6 +32,8 @@ class EpisodeInline(admin.TabularInline):
     object_link.allow_tags = True
     object_link.short_description = ''
 
+
+
 class MumInline(admin.TabularInline):
     verbose_name = "Mum"
     verbose_name_plural = "Mums"
@@ -66,7 +68,8 @@ class PodcastAdmin(admin.ModelAdmin):
 
 @admin.register(models.ChatMessage)
 class ChatMessageAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('document', 'issuer', 'date')
+    list_filter = ('document', 'issuer', 'date')
 
 
 class PublicationInline(admin.StackedInline):
@@ -79,13 +82,12 @@ class PublicationInline(admin.StackedInline):
         return False
 
 @admin.register(models.Episode)
-class EpisodeAdmin(ForeignKeyAutocompleteAdmin):
+class EpisodeAdmin(admin.ModelAdmin):
     inlines = (PublicationInline,)
-    search_fields = ('number', 'document__name', 'podcast__slugs__slug')
-    related_search_fields = {
-        'podcast': ('title',),
-        'document': ('name',),
-    }
+    search_fields = ('podcast__title', 'number')
+    list_display = ('podcast', 'number','date')
+    list_filter =  ('podcast', 'number','date')
+
     fieldsets = (
         (None, {
             'fields': ('podcast', 'number', 'type', 'episode_url', 'cover')
@@ -105,7 +107,8 @@ class EpisodeAdmin(ForeignKeyAutocompleteAdmin):
 
 @admin.register(models.Podcaster)
 class PodcasterAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name',)
+    list_filter =  ('name',)
 
 @admin.register(models.Shownoter)
 class ShownoterAdmin(admin.ModelAdmin):
@@ -135,7 +138,8 @@ class DocumentStateAdmin(admin.ModelAdmin):
 
 @admin.register(models.OSFTag)
 class DocumentStateAdmin(admin.ModelAdmin):
-    fields = ('short', 'name', 'description')
+    fields = ('name', 'short', 'description')
+    list_display = ('name','short', 'description')
 
 class DocumentAdminForm(ReverseOneToOneAdminForm):
     rels = ('episode',)
@@ -149,15 +153,21 @@ class DocumentAdminForm(ReverseOneToOneAdminForm):
 class DocumentAdmin(ReverseOneToOneAdmin):
     form = DocumentAdminForm
     search_fields = ('name',)
+    list_display = ('name', 'editor', 'creator', 'edit_date', 'access_date', 'create_date')
+    list_filter =  ('name', 'editor', 'creator', 'edit_date', 'access_date', 'create_date')
     rels = (('episode', 'document'),)
 
 @admin.register(models.Publication)
 class PublicationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('episode', 'creator', 'comment', 'create_date')
+    list_filter =  ('episode', 'creator', 'comment', 'create_date')
+    #search_fields = ('title', 'creator', 'number')
 
 @admin.register(models.PublicationRequest)
 class PublicationRequestAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('episode', 'requester', 'comment', 'create_date')
+    list_filter =  ('episode', 'requester', 'comment', 'create_date')
+    #search_fields = ('episode', 'requester', 'create_date')
 
 
 class NUserSocialInline(admin.TabularInline):
@@ -265,4 +275,6 @@ class ImporterLogAdmin(admin.ModelAdmin):
 @admin.register(models.Cover)
 class CoverAdmin(admin.ModelAdmin):
     fields = ('creator', 'create_date', 'file')
+    list_display = ('__str__', 'creator','create_date')
+    list_filter = ('creator','create_date')
 

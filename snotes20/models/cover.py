@@ -70,3 +70,6 @@ class Cover(models.Model):
             if img_temp:
                 img_temp.close()
 
+
+    def __str__(self):
+        return "{} ".format(self.original_url or self.file)
