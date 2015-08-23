@@ -3,7 +3,6 @@ from django.db.models import Q
 import snotes20.models as models
 
 import osf
-import modgrammar
 
 
 def find_or_create_osf_tag(short):
@@ -16,7 +15,7 @@ def find_or_create_osf_tag(short):
 
 
 def add_osf_note(state, line, parent=None):
-    if isinstance(line, modgrammar.ParseError):
+    if isinstance(line, osf.ParseError):
         error = models.DocumentStateError(
             state=state,
             line=line.line,
