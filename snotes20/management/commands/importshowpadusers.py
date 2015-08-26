@@ -40,7 +40,7 @@ class Command(BaseCommand):
 
             nuser = models.NUser()
             nuser.username = username
-            nuser.old_password = user['salt'] + '$' + str(user['iterations']) + '$' + user['password']
+            nuser.showpad_password = user['salt'] + '$' + str(user['iterations']) + '$' + user['password']
             nuser.date_joined = datetime.date.fromtimestamp(int(user['createTime']/1000))
             nuser.migrated = False
             nuser.is_active = True

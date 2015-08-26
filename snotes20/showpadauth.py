@@ -35,16 +35,16 @@ class ShowPadBackend(object):
         try:
             user = models.NUser.objects.get(username=username)
 
-            if user.old_password is None or user.migrated:
+            if user.showpad_password is None or user.migrated:
                 return None
 
             pw = bytearray(password, 'ascii')
-            old_pw = user.old_password.split('$')
-            salt = bytearray(old_pw[0], 'ascii')
-            iterations = int(old_pw[1])
+            showpad_pw = user.showpad_password.split('$')
+            salt = bytearray(showpad_pw[0], 'ascii')
+            iterations = int(showpad_pw[1])
 
             hash1 = pbkdf2(hashlib.sha1, pw, salt, iterations, 32)
-            hash2 = bytes.fromhex(old_pw[2])
+            hash2 = bytes.fromhex(showpad_pw[2])
 
             if hash1 == hash2:
                 return user

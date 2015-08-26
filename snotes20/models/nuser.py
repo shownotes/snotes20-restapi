@@ -58,7 +58,7 @@ class NUser(AbstractBaseUser, PermissionsMixin):
                              ])
 
     migrated = models.BooleanField(default=True)
-    old_password = models.CharField(max_length=500, null=True, blank=True, default=None)
+    showpad_password = models.CharField(max_length=500, null=True, blank=True, default=None)
     bio = models.CharField(max_length=400, default='', blank=True)
     pw_reset_token = models.CharField(max_length=30, null=True, blank=True)
 
@@ -74,8 +74,8 @@ class NUser(AbstractBaseUser, PermissionsMixin):
     def save(self, *args, **kwargs):
         if not self.pw_reset_token:
             self.pw_reset_token = None
-        if not self.old_password:
-            self.old_password = None
+        if not self.showpad_password:
+            self.showpad_password = None
         super(NUser, self).save(*args, **kwargs)
 
     def get_full_name(self):
@@ -86,7 +86,7 @@ class NUser(AbstractBaseUser, PermissionsMixin):
 
     def set_password(self, raw_password):
         self.migrated = True
-        self.old_password = None
+        self.showpad_password = None
 
         super(NUser).set_password(raw_password)
 
