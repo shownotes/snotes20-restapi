@@ -52,12 +52,7 @@ def create_doc_from_episode(request, episode_pk, number):
     doc.editor = models.EDITOR_ETHERPAD
     doc.creator = request.user
 
-    meta = models.DocumentMeta()
-
     with transaction.atomic():
-        meta.save()
-        doc.meta = meta
-
         doc.save()
 
         episode.document = doc
@@ -154,14 +149,14 @@ class DocumentViewSet(viewsets.ViewSet):
     @action(methods=['POST', 'DELETE'])
     def contributed(self, request, pk=None):
         document = get_object_or_404(models.Document, pk=pk)
-        exists = document.meta.shownoters.filter(user=request.user).exists()
+        exists = document.shownoters.filter(user=request.user).exists()
 
         if request.method == 'POST' and not exists:
             shownoter = models.Shownoter(user=request.user)
             shownoter.save()
-            document.meta.shownoters.add(shownoter)
+            document.shownoters.add(shownoter)
         elif request.method == 'DELETE' and exists:
-            document.meta.shownoters.filter(user=request.user).delete()
+            document.shownoters.filter(user=request.user).delete()
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -233,11 +228,11 @@ class DocumentViewSet(viewsets.ViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         if request.method == 'DELETE':
-            document.meta.shownoters.filter(user=user).delete()
+            document.shownoters.filter(user=user).delete()
         elif request.method == 'POST':
             shownoter = models.Shownoter(user=user)
             shownoter.save()
-            document.meta.shownoters.add(shownoter)
+            document.shownoters.add(shownoter)
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -248,17 +243,17 @@ class DocumentViewSet(viewsets.ViewSet):
 
         name = request.DATA['name']
         document = get_object_or_404(models.Document, pk=pk)
-        exists = any(rpodcaster.name == name for rpodcaster in document.meta.podcasters.all())
+        exists = any(rpodcaster.name == name for rpodcaster in document.podcasters.all())
 
         if request.method == 'POST' and not exists:
-            rpodcaster = models.RawPodcaster(name=name, meta=document.meta)
+            rpodcaster = models.RawPodcaster(name=name, document=document)
             try:
                 rpodcaster.clean_fields()
             except ValidationError:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-            document.meta.podcasters.add(rpodcaster)
+            document.podcasters.add(rpodcaster)
         elif request.method == 'DELETE' and exists:
-            document.meta.podcasters.get(name=name).delete()
+            document.podcasters.get(name=name).delete()
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -409,7 +404,7 @@ class DocumentViewSet(viewsets.ViewSet):
 
                 pub.save()
 
-                pub.shownoters.add(*document.meta.shownoters.all())
+                pub.shownoters.add(*document.shownoters.all())
 
                 episode.publicationrequests.all().delete()
 

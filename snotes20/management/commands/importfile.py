@@ -239,14 +239,12 @@ class Command(BaseCommand):
 
                     try:
                         db_doc = models.Document.objects.get(name=doc_name)
-                        db_meta = db_doc.meta
 
                         if existingmode == 'skip':
                             print('[?] skip (existing)')
                             continue
                         elif existingmode == 'delete':
                             db_doc.remove()
-                            db_meta.remove()
                             raise models.Document.DoesNotExist()
                         elif existingmode == 'update':
                             pass
@@ -255,25 +253,19 @@ class Command(BaseCommand):
                             return
                     except models.Document.DoesNotExist:
                         db_doc = models.Document()
-                        db_meta = models.DocumentMeta()
-
-                    db_meta.save()
 
                     for pod in podcasters:
                         db_podcaster = models.RawPodcaster(name=pod)
-                        db_podcaster.meta = db_meta
+                        db_podcaster.document = db_doc
                         db_podcaster.save()
 
                     for noter in shownoters:
                         db_noter = models.Shownoter(name=noter)
                         db_noter.save()
-                        db_meta.shownoters.add(db_noter)
-
-                    db_meta.save()
+                        db_doc.shownoters.add(db_noter)
 
                     db_doc.name = pad_name
                     db_doc.editor = models.EDITOR_ETHERPAD
-                    db_doc.meta = db_meta
                     db_doc.save()
 
                     editor = editors.EditorFactory.get_editor(db_doc.editor)

@@ -27,22 +27,6 @@ CONTENTTYPE_CHOICES = (
 )
 
 
-class DocumentMeta(models.Model):
-    id = PostgreSQLUUIDField(primary_key=True, auto=True)
-    shownoters = models.ManyToManyField(Shownoter, blank=True)
-
-    def __str__(self):
-        try:
-            return "Meta for " + self.document.__str__()
-        except:
-            return "Meta without document?"
-
-
-class RawPodcaster(models.Model):
-    meta = models.ForeignKey(DocumentMeta, related_name="podcasters")
-    name = models.CharField(max_length=150, validators=[MinLengthValidator(2)])
-
-
 class Document(models.Model):
     name = models.CharField(primary_key=True, max_length=40)
     state = models.ForeignKey(DocumentState, null=True, blank=True, on_delete=models.SET_NULL)
@@ -52,9 +36,10 @@ class Document(models.Model):
     access_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True)
-    meta = models.OneToOneField(DocumentMeta, related_name='document', null=True, blank=True, on_delete=models.CASCADE)
     type = models.CharField(max_length=3, choices=CONTENTTYPE_CHOICES, default=CONTENTTYPE_OSF)
     access_time = models.DateTimeField(null=True, blank=True)
+
+    shownoters = models.ManyToManyField(Shownoter, blank=True)
 
     def urlname(self):
         editor = editors.EditorFactory.get_editor(self.editor)
@@ -69,10 +54,11 @@ class Document(models.Model):
 
         return "{}".format(self.name)
 
-@receiver(post_delete, sender=Document)
-def doc_post_delete_meta(sender, instance, *args, **kwargs):
-    if instance.meta:
-        instance.meta.delete()
+
+class RawPodcaster(models.Model):
+    document = models.ForeignKey(Document, related_name="podcasters")
+    name = models.CharField(max_length=150, validators=[MinLengthValidator(2)])
+
 
 CHAT_MSG_ISSUER_USER = 'USR'
 

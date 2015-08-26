@@ -118,11 +118,6 @@ class RawPodcasterInline(admin.TabularInline):
     model = models.RawPodcaster
     extra = 0
 
-@admin.register(models.DocumentMeta)
-class DocumentMetaAdmin(admin.ModelAdmin):
-    fields = ('shownoters',)
-    inlines = [RawPodcasterInline,]
-
 
 class OSFNoteInline(admin.TabularInline):
     model = models.OSFNote
@@ -144,6 +139,8 @@ class DocumentStateAdmin(admin.ModelAdmin):
 class DocumentAdminForm(ReverseOneToOneAdminForm):
     rels = ('episode',)
     episode = forms.ModelChoiceField(queryset=models.Episode.objects.all(), required=False)
+    fields = ('shownoters',)
+    inlines = [RawPodcasterInline,]
 
     class Meta:
         model = models.Document
