@@ -78,28 +78,17 @@ class NUser(AbstractBaseUser, PermissionsMixin):
             self.old_password = None
         super(NUser, self).save(*args, **kwargs)
 
-    def is_authenticated_raw(self):
-        return super(NUser, self).is_authenticated()
-
-    def is_authenticated(self):
-        return self.is_authenticated_raw() and self.migrated
-
     def get_full_name(self):
         return self.username
 
     def get_short_name(self):
         return self.username
 
-    def migrate(self, password, request=None):
-        with transaction.atomic():
-            self.migrated = True
-            self.old_password = None
-            self.save()
+    def set_password(self, raw_password):
+        self.migrated = True
+        self.old_password = None
 
-            if request is None:
-                self.set_password(password)
-            else:
-                self.set_password_keep_session(request, password)
+        super(NUser).set_password(raw_password)
 
     def set_password_keep_session(self, request, raw_password):
         self.set_password(raw_password)
@@ -162,7 +151,6 @@ class NUser(AbstractBaseUser, PermissionsMixin):
         print(password)
         self.pw_reset_token = None
         self.set_password(password)
-        self.migrated = True
         self.save()
 
     def email_pw_reset(self, lang):

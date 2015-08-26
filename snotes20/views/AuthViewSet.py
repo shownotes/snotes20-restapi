@@ -10,8 +10,7 @@ import snotes20.models as models
 
 def get_user_resp_from_user(user):
     return {
-        'username': user.username,
-        'migrated': user.migrated
+        'username': user.username
     }
 
 

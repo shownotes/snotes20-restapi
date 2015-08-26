@@ -66,20 +66,6 @@ class UserViewSet(viewsets.ViewSet):
             pass
         raise PermissionDenied()
 
-    @action(methods=['POST'])
-    def upgrade(self, request, pk=None):
-        if not request.user.is_authenticated_raw() or request.user.migrated:
-            raise PermissionDenied()
-
-        if 'password' not in request.DATA:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        password = request.DATA['password']
-        user = request.user
-        user.migrate(password, request=request)
-
-        return Response(status=status.HTTP_200_OK)
-
     def retrieve(self, request, pk=None):
         if pk == "me":
             if not request.user.is_authenticated():
