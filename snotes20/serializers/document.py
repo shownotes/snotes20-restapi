@@ -30,7 +30,7 @@ class DocumentMetaSerializer(ModelSerializer):
 
 class SubEpisodeSerializer(EpisodeSerializer):
     class Meta(EpisodeSerializer.Meta):
-        fields = list(set(EpisodeSerializer.Meta.fields) - {'document',})
+        fields = list(set(EpisodeSerializer.Meta.fields) - {'document', 'creator'})
 
 
 class DocumentSerializer(ModelSerializer):
