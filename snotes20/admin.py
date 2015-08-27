@@ -66,11 +66,6 @@ class PodcastAdmin(admin.ModelAdmin):
         }),
     )
 
-@admin.register(models.ChatMessage)
-class ChatMessageAdmin(admin.ModelAdmin):
-    list_display = ('document', 'issuer', 'date')
-    list_filter = ('document', 'issuer', 'date')
-
 
 class PublicationInline(admin.StackedInline):
     model = models.Publication

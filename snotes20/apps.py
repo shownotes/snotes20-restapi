@@ -15,7 +15,6 @@ class DefaultConfig(AppConfig):
         import snotes20.serializers as serializers
 
         rbbits.add_create_wire(models.Document, rbbits.TT_DOCUMENT_NEW)
-        rbbits.add_create_wire(models.ChatMessage, rbbits.TT_DOCUMENT_CHATMESSAGE, True, serializers.ChatMessageSerializer)
         rbbits.add_create_wire(models.Publication, rbbits.TT_PUBLICATION_NEW)
         rbbits.add_create_wire(models.PublicationRequest, rbbits.TT_PUBLICATION_REQUESTED)
 

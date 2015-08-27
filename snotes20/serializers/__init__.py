@@ -2,7 +2,7 @@ from .podcast import PodcastSerializer, EpisodeSerializer, MinimalEpisodeSeriali
 from .podcast import BasePodcastSerializer, BaseEpisodeSerializer
 from .podcast import SubPodcastSerializer, MinimalPodcastSerializer, SubEpisodeSerializer
 from .publication import PublicationSerializer, PublicationRequestSerializer
-from .document import DocumentSerializer, ChatMessageSerializer
+from .document import DocumentSerializer
 from .user import NUserSerializer, NUserRegisterSerializer
 from .importer import ImporterLogSerializer
 from .state import DocumentStateErrorSerializer, OSFNoteSerializer

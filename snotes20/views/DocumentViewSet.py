@@ -262,41 +262,6 @@ class DocumentViewSet(viewsets.ViewSet):
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
-    @action(methods=['POST', 'GET'])
-    def chat(self, request, pk=None):
-        document = get_object_or_404(models.Document, pk=pk)
-
-        if request.method == 'POST':
-            if 'message' not in request.DATA:
-                raise PermissionDenied()
-
-            issuer = models.ChatMessageIssuer()
-            issuer.type = models.CHAT_MSG_ISSUER_USER
-            issuer.user = request.user
-            issuer.save()
-
-            msg = models.ChatMessage()
-            msg.message = request.DATA['message']
-            msg.document = document
-            msg.issuer = issuer
-            msg.order = int(round(time.time() * 1000))
-            msg.save()
-
-            return Response(status=status.HTTP_202_ACCEPTED)
-        elif request.method == 'GET':
-            msgs = document.messages.all()
-
-            try:
-                if 'since' in request.QUERY_PARAMS:
-                    msgs = msgs.filter(order__gt=int(request.QUERY_PARAMS['since']))
-            except:
-                return Response([], status=status.HTTP_200_OK)
-
-            msgs = msgs.order_by('order')
-
-            data = serializers.ChatMessageSerializer(msgs, many=True).data
-            return Response(data, status=status.HTTP_200_OK)
-
     @detail_route(methods=['POST', 'GET'], permission_classes=(AllowAny,))
     def text(self, request, pk=None):
         document = get_object_or_404(models.Document, pk=pk)

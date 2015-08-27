@@ -73,26 +73,3 @@ class Document(models.Model):
 def doc_post_delete_meta(sender, instance, *args, **kwargs):
     if instance.meta:
         instance.meta.delete()
-
-CHAT_MSG_ISSUER_USER = 'USR'
-
-CHAT_MSG_ISSUER_CHOICES = (
-    (CHAT_MSG_ISSUER_USER, 'User'),
-)
-
-
-class ChatMessageIssuer(models.Model):
-    type = models.CharField(max_length=3, choices=CHAT_MSG_ISSUER_CHOICES)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-
-    def __str__(self):
-        return "{}".format(self.user.username)
-
-
-class ChatMessage(models.Model):
-    id = PostgreSQLUUIDField(primary_key=True, auto=True)
-    order = models.BigIntegerField()
-    document = models.ForeignKey(Document, related_name='messages')
-    issuer = models.OneToOneField(ChatMessageIssuer)
-    message = models.CharField(max_length=200)
-    date = models.DateTimeField(default=datetime.now)
