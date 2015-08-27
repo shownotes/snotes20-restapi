@@ -94,4 +94,7 @@ $ ./bin/run.sh
 The API-secret can be found in `etherpad-lite/APIKEY.txt`.
 
 ## amqp
-todo
+
+snotes20 publishes a number of events via amqp. The following keys must be set in `local_settings.py`:
+* `RABBITMQ_ENABLED = True`,
+* `RABBITMQ_URI = 'amqp://guest:guest@127.0.0.1:5672/%2F'`
