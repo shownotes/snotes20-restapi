@@ -13,8 +13,11 @@ logger = logging.getLogger(__name__)
 
 
 def update_document(doc, sigh):
+    # execute parser
     prepped = contenttypes.prep_state(doc)
 
+    #TODO reduce write access on contenttypes.get_state
+    # Two states - sight and live
     with transaction.atomic():
         raw_state, state = contenttypes.get_state(prepped)
 
