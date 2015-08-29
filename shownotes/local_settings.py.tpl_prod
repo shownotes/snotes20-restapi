@@ -1,0 +1,75 @@
+# ONLY set to True, if this is a development-config
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+
+# hostnames from which the clients can access the API, e.g. 'shownot.es'
+# this is the hostname running the *frontend*
+CORS_ORIGIN_WHITELIST = [
+]
+
+# full URL to the frontend
+SITEURL = ''
+
+# hostnames on which the API can be accessed, e.g. 'shownot.es'
+# this is the hostname running the *backend*
+ALLOWED_HOSTS = [
+]
+
+# Various editor-configs. At the moment there is only etherpad-like ("EP").
+EDITORS = {
+    'EP': {
+      # found in APIKEY.txt in the etherpad-directory
+      "secret": "",
+      # FULL url to etherpad-lite pads, e.g. https://localhost:9001/p
+      "userurl": "",
+      # FULL url to the etherpad-lite API, e.g. https://localhost:9001/api
+      "apiurl": ""
+    }
+}
+
+# Key used for cryptographic signing of sessions and so on. Make it long (50+ chars), keep it secret.
+# https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-SECRET_KEY
+SECRET_KEY = ''
+
+# Database settings. Only postgresql is supported at the moment.
+# https://docs.djangoproject.com/en/dev/ref/databases/
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '5432',
+    }
+}
+
+# full path to a directory in which django can put static files (e.g. css for the admin-area), e.g. '/var/www/html/static'
+STATIC_ROOT = ''
+# URL to where STATIC_ROOT can be accessed via the web, e.g. '/static'
+STATIC_URL = ''
+
+# sub-path in which the API is run, if any, e.g. '/api/'
+FORCE_SCRIPT_NAME = ''
+
+# full path to the media directory, where we store user-content like podcast-covers, e.g. '/var/www/html/media'
+# this must be accessible via the web and must match the setting in the frontends config.js
+MEDIA_ROOT = ''
+
+# set to True, if the API is run behind a reverse-proxy (e.g. apache on uberspace)
+USE_X_FORWARDED_HOST = False
+
+EMAIL_HOST = 'mail.goooogle.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'user'
+EMAIL_HOST_PASSWORD = 'password'
+EMAIL_USE_TLS = True
+
+DEFAULT_FROM_EMAIL = 'noreply@localhost'
+
+# number of podcasts to list as 'recent' at the top of the archive-page
+ARCHIVE_RECENT_COUNT = 5
+
+RABBITMQ_ENABLED = False
+# format: amqp://USER:PASSWORD@HOST:PORT/%2F
+RABBITMQ_URI = ''

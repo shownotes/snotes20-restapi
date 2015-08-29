@@ -7,7 +7,7 @@ $ cd snotes20-restapi
 $ virtualenv venv
 $ . venv/bin/activate
 $ pip install -r requirements.txt
-   # create local_settings.py (see below)
+   # copy either of the 'shownotes/local_settings.py.tpl_*'-files to 'shownotes/local_settings.py' and adapt 
 $ python manage.py migrate
 $ python manage.py loaddata OSFTag.yaml
 $ python manage.py loaddata NUserSocialType.yaml
@@ -15,62 +15,6 @@ $ python manage.py createsuperuser
 ```
 
 In addition, you will need a postgresql-server.
-
-## Settings
-Create a `./shownotes/local_settings.py`-file and put something like the following in it.
-```
-SECRET_KEY = ''
-
-# if this is a development-config
-DEBUG = True
-TEMPLATE_DEBUG = True
-
-CORS_ORIGIN_WHITELIST = (
-    'localhost',
-    'localhost:9000',
-)
-
-ALLOWED_HOSTS = [
-    'localhost'
-]
-
-EDITORS = {
-    'EP': {
-      "secret": "fooooo",
-      "userurl": "http://localhost:9001/p",
-      "apiurl": "http://localhost:9001/api"
-    }
-}
-
-# Database settings
-# https://docs.djangoproject.com/en/dev/ref/databases/
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '5432',
-    }
-}
-
-SITEURL = "http://localhost:9000"
-
-DEFAULT_FROM_EMAIL = 'noreply@localhost'
-
-EMAIL_HOST = 'mail.goooogle.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'user'
-EMAIL_HOST_PASSWORD = 'password'
-EMAIL_USE_TLS = True
-
-ARCHIVE_RECENT_COUNT = 5
-
-RABBITMQ_ENABLED = False
-RABBITMQ_URI = 'amqp://guest:guest@127.0.0.1:5672/%2F'
-```
 
 ## dev server
 To start the development server at http://127.0.0.1:8000/ execute:
