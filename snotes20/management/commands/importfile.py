@@ -55,13 +55,13 @@ filename,,podcast-slug,number,delete,no-podcast,private,hoerid
 
 def clean_people_list(str):
     str = str.replace(' und ', ', ').replace(' and ', ', ')
-    for i in str.split(','):
-        i = i.strip()
+    for person in str.split(','):
+        person = person.strip()
 
-        if len(i) > 0:
-            if '(@' in i:
-                i = i.replace('(@', '<@').replace(')', '>')
-            yield i
+        if len(person) > 0:
+            if '(@' in person:
+                person = person.replace('(@', '<@').replace(')', '>')
+            yield person
 
 
 def try_header_value(header, keys, default):
