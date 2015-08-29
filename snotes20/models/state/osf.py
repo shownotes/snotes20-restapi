@@ -60,14 +60,16 @@ class OSFNote(models.Model):
     tags = models.ManyToManyField(OSFTag, related_name="notes")
 
     def to_dict(self, level):
+        tags = [tag.name for tag in self.tags.all()]
+
         return {
             'timestamp': self.timestamp,
             'title': self.title,
             'url': self.url,
-            'revision': 'revision' in self.tags.all(),
+            'revision': 'revision' in tags,
             'valid': True,
             'errorMessages': [],
-            'tags': [tag.name for tag in self.tags.all()],
+            'tags': tags,
             'level': level,
         }
 
