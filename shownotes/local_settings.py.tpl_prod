@@ -15,15 +15,15 @@ SITEURL = ''
 ALLOWED_HOSTS = [
 ]
 
-# Various editor-configs. At the moment there is only etherpad-like ("EP").
+# Various editor-configs. At the moment there is only etherpad-like ('EP').
 EDITORS = {
     'EP': {
       # found in APIKEY.txt in the etherpad-directory
-      "secret": "",
+      'secret': '',
       # FULL url to etherpad-lite pads, e.g. https://localhost:9001/p
-      "userurl": "",
+      'userurl': '',
       # FULL url to the etherpad-lite API, e.g. https://localhost:9001/api
-      "apiurl": ""
+      'apiurl': ''
     }
 }
 
@@ -46,7 +46,7 @@ DATABASES = {
 
 # full path to a directory in which django can put static files (e.g. css for the admin-area), e.g. '/var/www/html/static'
 STATIC_ROOT = ''
-# URL to where STATIC_ROOT can be accessed via the web, e.g. '/static'
+# URL to where STATIC_ROOT can be accessed via the web, e.g. '/static/'
 STATIC_URL = ''
 
 # sub-path in which the API is run, if any, e.g. '/api/'
