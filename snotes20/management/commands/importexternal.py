@@ -24,6 +24,7 @@ def job_update_podcasts(source):
 
     for podcast, slug in podcasts:
         with transaction.atomic():
+            logger.debug("Search for existing source_id {}".format(podcast.source_id))
             podqry = models.Podcast.objects.filter(source_id=podcast.source_id).filter(source=source.shortname)
 
             if podqry.exists():

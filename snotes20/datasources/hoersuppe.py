@@ -25,7 +25,9 @@ class HoersuppeDataSource(AbstractDataSource):
             else:
                 type = models.TYPE_PODCAST
 
-            cover = models.Cover.from_url(None, data.imageurl)
+            cover = None
+            if data.imageurl:
+                cover = models.Cover.from_url(None, data.imageurl)
 
             if cover is None:
                 logger.debug("could not get cover for %s", pod.slug)
