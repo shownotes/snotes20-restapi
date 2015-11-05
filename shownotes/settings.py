@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'corsheaders',
     'rules.apps.AutodiscoverRulesConfig',
     'snotes20',
+    'statistic',
 )
 
 MIDDLEWARE_CLASSES = (
