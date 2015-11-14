@@ -13,3 +13,4 @@ from .publication import Publication, PublicationRequest, Podcaster
 from .showoter import Shownoter
 from .nuser import NUser, NUserSocialType, NUserSocial, NUserEmailToken
 from .importer import ImporterLog, ImporterDatasourceLog, ImporterJobLog
+from .notifylist import Notifylist
