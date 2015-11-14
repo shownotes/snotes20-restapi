@@ -277,9 +277,3 @@ class CoverAdmin(admin.ModelAdmin):
     fields = ('creator', 'create_date', 'file')
     list_display = ('__str__', 'creator','create_date')
     list_filter = ('creator','create_date')
-
-@admin.register(models.Notifylist)
-class NotifyList(admin.ModelAdmin):
-    fields = ('user', 'type','creator', 'create_date')
-    list_display = ('__str__', 'creator','create_date')
-    list_filter = ('creator','create_date')

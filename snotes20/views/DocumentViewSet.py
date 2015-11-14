@@ -1,6 +1,5 @@
 from datetime import datetime
 import time
-import string
 
 from django.shortcuts import get_object_or_404
 from django.db import transaction
@@ -17,6 +16,7 @@ import snotes20.serializers as serializers
 import snotes20.models as models
 import snotes20.editors as editors
 import snotes20.contenttypes as contenttypes
+from notifyservices.tasks import send_to_irc
 
 
 def find_doc_name(prefix, sep='-'):
@@ -82,7 +82,7 @@ def create_doc_from_nolive(request):
         )
 
         episode.save()
-
+        #send_to_irc.delay(request.user.username + ' hat für den Podcast "' + podcast.title + '" die Episode ' + number + ' angelegt!')
         return create_doc_from_episode(request, episode.pk, number)
 
 
