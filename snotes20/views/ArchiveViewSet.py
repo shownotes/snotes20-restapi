@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.db.models import Max, Q
-from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -8,6 +7,7 @@ from rest_framework.decorators import action, list_route
 
 import snotes20.models as models
 import snotes20.serializers as serializers
+from notifyservices.irc import send_to_irc
 
 class ArchiveViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -29,6 +29,7 @@ class ArchiveViewSet(viewsets.ViewSet):
                 'ORDER BY pub_create DESC '
                 'LIMIT ' + str(settings.ARCHIVE_RECENT_COUNT) + ';'
             )
+            #send_to_irc(request.user.username + ' schaut sich gerade das Archiv an.')
         elif type == 'full':
             qry = models.Podcast.objects.all()
         else:

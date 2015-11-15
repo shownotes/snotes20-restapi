@@ -1,8 +1,6 @@
 from django.apps import AppConfig
 from django.db.models.signals import post_save, post_delete
-
 from etherpad_lite import EtherpadException
-
 import snotes20.models as models
 import snotes20.editors as editors
 import snotes20.hereberabbits as rbbits
@@ -12,14 +10,14 @@ class DefaultConfig(AppConfig):
     name = 'snotes20'
 
     def ready(self):
-        import snotes20.serializers as serializers
+        #import snotes20.serializers as serializers
 
-        rbbits.add_create_wire(models.Document, rbbits.TT_DOCUMENT_NEW)
-        rbbits.add_create_wire(models.ChatMessage, rbbits.TT_DOCUMENT_CHATMESSAGE, True, serializers.ChatMessageSerializer)
-        rbbits.add_create_wire(models.Publication, rbbits.TT_PUBLICATION_NEW)
-        rbbits.add_create_wire(models.PublicationRequest, rbbits.TT_PUBLICATION_REQUESTED)
+        #rbbits.add_create_wire(models.Document, rbbits.TT_DOCUMENT_NEW)
+        #rbbits.add_create_wire(models.ChatMessage, rbbits.TT_DOCUMENT_CHATMESSAGE, True, serializers.ChatMessageSerializer)
+        #rbbits.add_create_wire(models.Publication, rbbits.TT_PUBLICATION_NEW)
+        #rbbits.add_create_wire(models.PublicationRequest, rbbits.TT_PUBLICATION_REQUESTED)
 
-        rbbits.init()
+        #rbbits.init()
 
         def editor_create_doc(sender, instance, created, **kwargs):
             if created:

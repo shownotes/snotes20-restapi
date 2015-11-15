@@ -1,9 +1,67 @@
+from threading import Thread
 import time
+import logging
+
+from kombu import Connection, Exchange, Queue
 from ircutils3 import bot
+
 from shownotes import settings
+from notifyservices.models import Notifylist
+from snotes20.models import NUserSocial
+
+LOGGER = logging.getLogger(__name__)
+IRC_EXCHANGE = Exchange('IRC_MESSAGES', 'fanout', durable=True)
+IRC_QUEUE = Queue('IRC-BOT', exchange=IRC_EXCHANGE, routing_key='IRC')
+
+
+def send_to_irc(message):
+    with Connection(settings.RABBITMQ_URI) as conn:
+        # produce
+        LOGGER.info("send to irc")
+        producer = conn.Producer(serializer='pickle')
+        producer.publish(message, exchange=IRC_EXCHANGE, routing_key='IRC', declare=[IRC_QUEUE])
+        producer.close()
+
+
+def handle_messages(thread):
+    with Connection(settings.RABBITMQ_URI) as conn:
+        # consume
+        with conn.Consumer([IRC_QUEUE], callbacks=[thread.process_message], accept=['pickle']) as consumer:
+            # Process messages and handle events on all channels
+            while True:
+                conn.drain_events()
+
+
+def Bot_Factory():
+    th = BotThread(Ircbot())
+    th.start()
+    handle_messages(thread=th)
+    return th
+
+
+class BotThread(Thread):
+    def __init__(self, bot):
+        self.bot = bot
+        super().__init__()
+
+    def run(self):
+        while True:
+            self.bot.start()
+
+    def process_message(self, body, message):
+        recipients = []
+        recipients_user = Notifylist.objects.filter(type='irc').values('user_id')
+        recipients_user = NUserSocial.objects.filter(user_id=recipients_user).filter(type_id='irc').values('value')
+
+        for r in recipients_user:
+            recipients.append(r['value'])
+        for recipient in recipients:
+            self.bot.send_message(recipient, "Hallo " + recipient + ". " + body)
+        message.ack()
+
 
 class Ircbot(bot.SimpleBot):
-    def __init__(self,recipients,message):
+    def __init__(self):
         self.nick = settings.IRC_NICK
         self.passwd = settings.IRC_PASSWD
         self.real_name = settings.IRC_REALNAME
@@ -11,29 +69,21 @@ class Ircbot(bot.SimpleBot):
         self.port = settings.IRC_PORT
         self.mychannels = settings.IRC_CHANNELS
         self.reconnects = 0
-        self.message = message
-        self.recipients = recipients
-        self.ready = False
         bot.SimpleBot.__init__(self, self.nick)
+        #self.connect(self.server, port=self.port, channel=self.mychannels)
         self.connect(self.server, port=self.port)
 
     ### events ###
     def on_any(self, event):
         #print("command:" + event.command)
         #print("params:" + str(event.params))
-
         if event.command == "ERR_NICKNAMEINUSE":
             self.disconnect()
         if event.command == "RPL_ENDOFMOTD":
             # if self.passwd:
             # self.identify(self.passwd)
-            time.sleep(1)
-            for recipient in self.recipients:
-                print(recipient)
-                self.send_message(recipient, "Hallo " + recipient + ". " + self.message)
-            self.ready = True
-            time.sleep(1)
-            self.disconnect()
+            LOGGER.info("Bot online")
+            print("Bot online")
 
     def on_ctcp_version(self, event):
         self.send_ctcp_reply(event.source, "VERSION", ["Shownot.es Bot v0"])
@@ -42,9 +92,11 @@ class Ircbot(bot.SimpleBot):
         pass
 
     def on_disconnect(self, event):
-        if self.reconnects < 3 and not self.ready:
+        if self.reconnects < 3:
+            LOGGER.info("reconnect...")
             time.sleep(6)
             self.reconnects += 1
             self.connect(self.server, port=self.port)
         else:
+            LOGGER.info("Bot offline")
             self.disconnect()
