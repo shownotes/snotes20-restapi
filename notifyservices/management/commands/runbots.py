@@ -4,8 +4,9 @@ from notifyservices.irc import Bot_Factory
 
 class Command(BaseCommand):
     args = ''
-    help = 'Start Ircbot'
+    help = 'Start Bots'
 
     def handle(self, *args, **options):
-        Bot_Factory()
-        print("Running....")
+        Bot_Factory(type='irc')
+        print("IRC-Bot started")
+        print("All bots started")

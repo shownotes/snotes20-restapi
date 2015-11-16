@@ -10,6 +10,7 @@ from notifyservices.models import Notifylist
 from snotes20.models import NUserSocial
 
 LOGGER = logging.getLogger(__name__)
+
 IRC_EXCHANGE = Exchange('IRC_MESSAGES', 'fanout', durable=True)
 IRC_QUEUE = Queue('IRC-BOT', exchange=IRC_EXCHANGE, routing_key='IRC')
 
@@ -32,11 +33,15 @@ def handle_messages(thread):
                 conn.drain_events()
 
 
-def Bot_Factory():
-    th = BotThread(Ircbot())
-    th.start()
-    handle_messages(thread=th)
-    return th
+
+
+def Bot_Factory(type=None):
+    if type == 'irc':
+        th = BotThread(Ircbot())
+        th.start()
+        return th
+    else:
+        return None
 
 
 class BotThread(Thread):
@@ -45,8 +50,8 @@ class BotThread(Thread):
         super().__init__()
 
     def run(self):
-        while True:
             self.bot.start()
+            handle_messages(thread=self)
 
     def process_message(self, body, message):
         recipients = []
@@ -82,8 +87,8 @@ class Ircbot(bot.SimpleBot):
         if event.command == "RPL_ENDOFMOTD":
             # if self.passwd:
             # self.identify(self.passwd)
-            LOGGER.info("Bot online")
-            print("Bot online")
+            LOGGER.info("IRC-Bot online")
+            print("IRC-Bot online")
 
     def on_ctcp_version(self, event):
         self.send_ctcp_reply(event.source, "VERSION", ["Shownot.es Bot v0"])
@@ -98,5 +103,5 @@ class Ircbot(bot.SimpleBot):
             self.reconnects += 1
             self.connect(self.server, port=self.port)
         else:
-            LOGGER.info("Bot offline")
+            LOGGER.info("IRC-Bot offline")
             self.disconnect()
