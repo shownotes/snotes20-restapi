@@ -17,8 +17,8 @@ class Ircbot(bot.SimpleBot):
         self.mychannels = settings.IRC_CHANNELS
         self.reconnects = 0
         bot.SimpleBot.__init__(self, self.nick)
-        #self.connect(self.server, port=self.port, channel=self.mychannels)
-        self.connect(self.server, port=self.port)
+        self.connect(self.server, port=self.port, channel=self.mychannels)
+        #self.connect(self.server, port=self.port)
 
     ### events ###
     def on_any(self, event):
