@@ -5,7 +5,8 @@ from etherpad_lite import EtherpadException
 
 import snotes20.editors as editors
 import snotes20.models as models
-import notifyservices
+from notifyservices import NoftiyService
+
 
 class DefaultConfig(AppConfig):
     name = 'snotes20'
@@ -31,4 +32,4 @@ class DefaultConfig(AppConfig):
         post_save.connect(editor_create_doc, sender=models.Document, weak=False, dispatch_uid='editor_create_doc')
         post_delete.connect(editor_delete_doc, sender=models.Document, weak=False, dispatch_uid='editor_delete_doc')
 
-        notifyservices.init()
+        NoftiyService()

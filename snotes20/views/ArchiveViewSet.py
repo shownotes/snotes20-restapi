@@ -1,9 +1,8 @@
 from django.conf import settings
-from django.db.models import Max, Q
-
+from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.decorators import action, list_route
+from rest_framework.decorators import list_route
 
 import snotes20.models as models
 import snotes20.serializers as serializers

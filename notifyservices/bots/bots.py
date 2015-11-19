@@ -2,18 +2,19 @@ import logging
 from threading import Thread
 import json
 
-from notifyservices.connections import publication_exchange, document_exchange
 from notifyservices.models import Notifylist
-from kombu import Connection, Queue
+from kombu import Connection, Queue, Exchange
 from .irc import Ircbot
 
 from shownotes import settings
 from snotes20.models import NUserSocial
 
 LOGGER = logging.getLogger(__name__)
-PUBNEW_QUEUE = Queue('IRC-Bot', exchange=publication_exchange(), routing_key='publication.new')
-PUBREQ_QUEUE = Queue('IRC-Bot', exchange=publication_exchange(), routing_key='publication.request')
-DOCNEW_QUEUE = Queue('IRC-Bot', exchange=document_exchange(), routing_key='document.new')
+PUBEXCHANGE = Exchange("Publication", type="direct")
+DOCEXHANGE = Exchange("Document", type="direct")
+PUBNEW_QUEUE = Queue('IRC-Bot', exchange=PUBEXCHANGE, routing_key='publication.new')
+PUBREQ_QUEUE = Queue('IRC-Bot', exchange=PUBEXCHANGE, routing_key='publication.request')
+DOCNEW_QUEUE = Queue('IRC-Bot', exchange=DOCEXHANGE, routing_key='document.new')
 
 
 def Bot_Factory(type=None):
@@ -41,16 +42,16 @@ class BotThread(Thread):
     def process_message(self, body, message):
         msg = None
         recipients = []
-        body = jsonconvert(body)
-
+        body = json.loads(body)
+        print(type(body))
         if message.delivery_info["routing_key"] == "publication.new":
             msg = "{} hat eine Publikation für {}-{} veröffentlicht.".format(body["issuer"], body["podcast"], body["episodenumber"])
-            recipients.append("#shownotes")
+            #recipients.append("#shownotes")
         elif message.delivery_info["routing_key"] == "publication.request":
             msg = "{} hat einen Publikationsrequest für {}-{} erstellt. Bitte kümmere dich doch darum. :)".format(body["issuer"], body["podcast"], body["episodenumber"])
         elif message.delivery_info["routing_key"] == "document.new":
             msg = "Das Pad {} wurde erstellt.".format(body["name"])
-            recipients.append("#shownotes")
+            #recipients.append("#shownotes")
         else:
             return
 
@@ -76,7 +77,3 @@ class AMQPMessageHandlerThread(Thread):
                 # Process messages and handle events on all channels
                 while True:
                     conn.drain_events()
-
-
-def jsonconvert(jsonstring):
-    return json.loads(jsonstring)

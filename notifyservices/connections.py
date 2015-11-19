@@ -4,6 +4,7 @@ from django.core.serializers import json
 from kombu import Exchange, Connection
 import json
 from django.db.models.signals import post_save
+from kombu.message import Message
 
 from shownotes import settings
 import snotes20.models as models
@@ -22,59 +23,55 @@ LOGGER = logging.getLogger(__name__)
 # TT_USER_NEW = "USER_NEW"
 # TT_USER_UPDATED = "USER_UPDATED"
 
-def publication_exchange():
-    return Exchange('Publication', 'direct', durable=True)
+
+class NoftiyService(object):
+    def __init__(self):
+        if not settings.NOTIFYSERVICE:
+            return
+
+        self.conn = Connection(settings.RABBITMQ_URI)
+        self.exchanges = {}
+        self.create_bounded_Exchange("Publication")
+        post_save.connect(self.publicationrequest, sender=models.PublicationRequest, weak=False, dispatch_uid='publication_request')
+        post_save.connect(self.publication, sender=models.Publication, weak=False, dispatch_uid='publication_new')
+
+        # self.create_bounded_Exchange("Document")
+        #Zwei Aufrufe von Save - Nachschauen wo
+        #post_save.connect(self.newdocument, sender=models.Document, weak=False, dispatch_uid='document_new')
+
+    def create_bounded_Exchange(self, exchangename):
+        self.exchanges[exchangename] = Exchange(exchangename, 'direct', durable=True, channel=self.conn.default_channel)
+        self.exchanges[exchangename].declare()
+
+    def publicationrequest(self, sender, instance, **kwargs):
+        pk = str(instance.pk)
+        requester = str(instance.requester.username)
+        podcast = str(instance.episode.podcast.slug)
+        episodenumber = str(instance.episode.number)
+
+        body = {'pk': pk, 'issuer': requester, 'podcast': podcast, 'episodenumber': episodenumber}
+        self.publish("Publication", "publication.request", body)
 
 
-def document_exchange():
-    return Exchange('Document', 'direct', durable=True)
+    def publication(self, sender, instance, **kwargs):
+        pk = str(instance.pk)
+        creator = str(instance.creator.username)
+        podcast = str(instance.episode.podcast.slug)
+        episodenumber = str(instance.episode.number)
+
+        body = {'pk': pk, 'issuer': creator , 'podcast': podcast, 'episodenumber': episodenumber}
+        self.publish("Publication", "publication.new",body)
 
 
+    def newdocument(self, sender, instance, **kwargs):
+        pk = str(instance.pk)
+        name = str(instance.name)
 
-def init():
-    if not settings.RABBITMQ_ENABLED:
-        return
-    post_save.connect(publicationrequest, sender=models.PublicationRequest, weak=False, dispatch_uid='publication_request')
-    post_save.connect(publication, sender=models.Publication, weak=False, dispatch_uid='publication_new')
-    #Zwei Aufrufe von Save - Nachschauen wo
-    #post_save.connect(newdocument, sender=models.Document, weak=False, dispatch_uid='document_new')
+        body = {'pk': pk, 'name': name}
+        self.publish("Document", "document.new", body)
 
 
-def publicationrequest(sender, instance, **kwargs):
-    print("publication request")
-    pk = str(instance.pk)
-    requester = str(instance.requester.username)
-    podcast = str(instance.episode.podcast.slug)
-    episodenumber = str(instance.episode.number)
-
-    body = {'pk': pk, 'issuer': requester, 'podcast': podcast, 'episodenumber': episodenumber}
-    publish(publication_exchange(),"publication.request", json.dumps(body))
-
-
-def publication(sender, instance, **kwargs):
-    pk = str(instance.pk)
-    creator = str(instance.creator.username)
-    podcast = str(instance.episode.podcast.slug)
-    episodenumber = str(instance.episode.number)
-
-    body = {'pk': pk, 'issuer': creator , 'podcast': podcast, 'episodenumber': episodenumber}
-    publish(publication_exchange(),"publication.new", json.dumps(body))
-
-
-def newdocument(sender, instance, **kwargs):
-    pk = str(instance.pk)
-    name = str(instance.name)
-
-    body = {'pk': pk, 'name': name}
-    publish(document_exchange(),"document.new", json.dumps(body))
-
-
-def publish(exchange, routing_key, body):
-    if not settings.RABBITMQ_ENABLED:
-        return
-
-    with Connection(settings.RABBITMQ_URI) as conn:
-        # produce
-        producer = conn.Producer(serializer='json')
-        producer.publish(body, exchange=exchange, routing_key=routing_key)
+    def publish(self, exchangename, routing_key, body):
+        producer = self.conn.Producer(serializer='json')
+        producer.publish(json.dumps(body), exchange=self.exchanges[exchangename], routing_key=routing_key)
         producer.close()
