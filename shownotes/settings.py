@@ -36,6 +36,8 @@ INSTALLED_APPS = (
     'corsheaders',
     'rules.apps.AutodiscoverRulesConfig',
     'snotes20',
+    'djcelery',
+    'notifyservices',
     'statistic',
 )
 
@@ -170,6 +172,15 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'snotes20.NUser'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+
+IRC_NICK = 'FooBar'
+IRC_PASSWD = 'barz'
+IRC_REALNAME = 'Foo Bar'
+IRC_SERVER = 'irc.freenode.net'
+IRC_PORT = 6667
+IRC_CHANNELS = "#shownotes"
 
 # import deployment settings form local_settings.py
 try:

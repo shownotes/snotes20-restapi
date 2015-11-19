@@ -18,4 +18,4 @@ media
 # other
 node_modules
 *.log
-users.json
+*.pyc

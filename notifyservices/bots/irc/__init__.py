@@ -1,0 +1,1 @@
+from .ircbot import Ircbot

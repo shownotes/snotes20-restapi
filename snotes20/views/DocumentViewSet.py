@@ -1,6 +1,5 @@
 from datetime import datetime
 import time
-import string
 
 from django.shortcuts import get_object_or_404
 from django.db import transaction
@@ -82,7 +81,7 @@ def create_doc_from_nolive(request):
         )
 
         episode.save()
-
+        #send_to_irc.delay(request.user.username + ' hat für den Podcast "' + podcast.title + '" die Episode ' + number + ' angelegt!')
         return create_doc_from_episode(request, episode.pk, number)
 
 

@@ -4,7 +4,7 @@
 ```
 $ git clone git@github.com:shownotes/snotes20-restapi.git
 $ cd snotes20-restapi
-$ virtualenv venv
+$ virtualenv -p /PATH/TO/python3.4 venv
 $ . venv/bin/activate
 $ pip install -r requirements.txt
    # copy either of the 'shownotes/local_settings.py.tpl_*'-files to 'shownotes/local_settings.py' and adapt 
@@ -15,7 +15,17 @@ $ python manage.py collectstatic
 $ python manage.py createsuperuser
 ```
 
-In addition, you will need a postgresql-server.
+## PostgreSql
+
+You will need a postgresql server with a user and a predefined database
+
+```
+$ sudo -u postgres createuser -P -d USERNAME
+$ sudo -u postgres createdb -O USERNAME DATABASENAME 
+```
+
+Alter the database entry in local_settings.py
+
 
 ## dev server
 To start the development server at http://127.0.0.1:8000/ execute:

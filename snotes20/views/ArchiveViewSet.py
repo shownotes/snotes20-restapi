@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.db.models import Max, Q
-from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import viewsets
 from rest_framework.response import Response

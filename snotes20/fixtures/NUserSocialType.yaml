@@ -10,3 +10,11 @@
   pk: flattr
   fields:
     human_name: Flattr
+- model: snotes20.NUserSocialType
+  pk: xmpp
+  fields:
+    human_name: XMPP/Jabber
+- model: snotes20.NUserSocialType
+  pk: irc
+  fields:
+    human_name: IRC
