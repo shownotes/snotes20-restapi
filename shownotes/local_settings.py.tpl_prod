@@ -70,6 +70,14 @@ DEFAULT_FROM_EMAIL = 'noreply@localhost'
 # number of podcasts to list as 'recent' at the top of the archive-page
 ARCHIVE_RECENT_COUNT = 5
 
-RABBITMQ_ENABLED = False
-# format: amqp://USER:PASSWORD@HOST:PORT/%2F
-RABBITMQ_URI = ''
+NOTIFYSERVICE = False
+RABBITMQ_URI = 'amqp://guest:passwd@localhost:5672/%2F'
+PRIVATE_API_SECRET = "1234"
+
+IRC_ENABLED = False
+IRC_NICK = 'example-bot-nick'
+IRC_PASSWD = ''
+IRC_REALNAME = 'Example Bot'
+IRC_SERVER = 'irc.freenode.net'
+IRC_PORT = 6667
+IRC_CHANNELS = ["#shownotes",]

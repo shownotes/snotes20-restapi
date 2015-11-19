@@ -175,6 +175,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
 
+
+NOTIFYSERVICE = False
+RABBITMQ_URI = 'amqp://guest:passwd@localhost:5672/%2F'
+PRIVATE_API_SECRET = "EXAMPLE"
+
+IRC_ENABLED = False
 IRC_NICK = 'FooBar'
 IRC_PASSWD = 'barz'
 IRC_REALNAME = 'Foo Bar'
