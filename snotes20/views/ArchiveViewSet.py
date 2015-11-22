@@ -59,7 +59,9 @@ class ArchiveViewSet(viewsets.ViewSet):
             search_argument_list_title.append(Q(**{'title__icontains': word}))
             search_argument_list_url.append(Q(**{'url__icontains': word}))
 
-        lines = models.OSFNote.objects.filter(reduce(operator.and_, search_argument_list_title) or reduce(operator.and_, search_argument_list_url))\
+        print(reduce(operator.and_, search_argument_list_title))
+        print(reduce(operator.and_, search_argument_list_url))
+        lines = models.OSFNote.objects.filter(Q(reduce(operator.and_, search_argument_list_title)) | Q(reduce(operator.and_, search_argument_list_url)))\
             .filter(state__publication__isnull=False)\
             .distinct('state__publication__episode')
 
@@ -70,6 +72,9 @@ class ArchiveViewSet(viewsets.ViewSet):
 
         # reduce results (pagination possible)
         #lines = lines[:15]
+
+        for l in lines:
+            print(l.title, l.url)
 
         data = [
             {
