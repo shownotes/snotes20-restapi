@@ -27,8 +27,8 @@ class Ircbot(bot.SimpleBot):
         if event.command == "ERR_NICKNAMEINUSE":
             self.disconnect()
         if event.command == "RPL_ENDOFMOTD":
-            # if self.passwd:
-            # self.identify(self.passwd)
+            if self.passwd:
+            	self.identify(self.passwd)
             LOGGER.info("IRC-Bot online")
             print("IRC-Bot online")
 

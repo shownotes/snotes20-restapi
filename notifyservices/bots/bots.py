@@ -43,15 +43,16 @@ class BotThread(Thread):
         msg = None
         recipients = []
         body = json.loads(body)
-        print(type(body))
         if message.delivery_info["routing_key"] == "publication.new":
             msg = "{} hat eine Publikation für {}-{} veröffentlicht.".format(body["issuer"], body["podcast"], body["episodenumber"])
-            #recipients.append("#shownotes")
+            for channel in settings.IRC_CHANNELS:
+                recipients.append(channel)
         elif message.delivery_info["routing_key"] == "publication.request":
             msg = "{} hat einen Publikationsrequest für {}-{} erstellt. Bitte kümmere dich doch darum. :)".format(body["issuer"], body["podcast"], body["episodenumber"])
         elif message.delivery_info["routing_key"] == "document.new":
             msg = "Das Pad {} wurde erstellt.".format(body["name"])
-            #recipients.append("#shownotes")
+	    #for channel in settings.IRC_CHANNELS:
+            # 	recipients.append(channel)
         else:
             return
 
