@@ -1,5 +1,8 @@
+import operator
+
 from django.conf import settings
 from django.db.models import Q
+from functools import reduce
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import list_route
@@ -49,11 +52,24 @@ class ArchiveViewSet(viewsets.ViewSet):
     @list_route(methods=['POST'])
     def search(self, request):
         words = request.DATA['words']
-        lines = models.OSFNote.objects.filter(Q(title__icontains=words) or Q(url__icontains=words))\
-                                      .filter(state__publication__isnull=False)\
-                                      .distinct('state__publication__episode')
+        print(words)
+        search_argument_list_title = []
+        search_argument_list_url = []
+        for word in words:
+            search_argument_list_title.append(Q(**{'title__icontains': word}))
+            search_argument_list_url.append(Q(**{'url__icontains': word}))
 
-        lines = lines[:15]
+        lines = models.OSFNote.objects.filter(reduce(operator.and_, search_argument_list_title) or reduce(operator.and_, search_argument_list_url))\
+            .filter(state__publication__isnull=False)\
+            .distinct('state__publication__episode')
+
+        # --UPDATE-- here's an args example for completeness
+        # order = ['publish_date','title'] #create a list, possibly from GET or POST data
+        # ordered_query = query.order_by(*orders()) # Yay, you're ordered now!
+        # https://stackoverflow.com/questions/8510057/constructing-django-filter-queries-dynamically-with-args-and-kwargs
+
+        # reduce results (pagination possible)
+        #lines = lines[:15]
 
         data = [
             {
