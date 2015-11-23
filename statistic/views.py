@@ -15,4 +15,4 @@ class StatisticViewSet(viewsets.ViewSet):
     @list_route()
     def wordcloud(self, request):
         add_test.delay(4,4)
-        return HttpResponse()
+        return HttpResponse([{"text":"foo", "size":25}, {"text":"foobar", "size":17}, {"text":"bar", "size":12}, {"text":"shownotes", "size":5}])
