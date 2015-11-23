@@ -32,6 +32,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_swagger',
     'django_extensions',
     'corsheaders',
     'rules.apps.AutodiscoverRulesConfig',
@@ -64,14 +65,49 @@ REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
     )
-
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
 #    'DEFAULT_PERMISSION_CLASSES': [
 #        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
 #    ]
 }
+
+SWAGGER_SETTINGS = {
+    'exclude_namespaces': [],
+    'api_version': '0.23',
+    'api_path': '/docs',
+    'enabled_methods': [
+        'get',
+        'post',
+        'put',
+        'patch',
+        'delete'
+    ],
+    'api_key': 'foobar',
+    'is_authenticated': False,
+    'is_superuser': False,
+    'permission_denied_handler': None,
+    'resource_access_handler': None,
+    #'base_path':'http://snotes20.com:8000/api-doc',
+    'info': {
+        'contact': 'intern@shownot.es',
+        'description': 'This is the API documenation of Shownot.es. '
+                       'More information at '
+                       '<a href="https://shownot.es">'
+                       'https://shownot.es</a> '
+                       'or on irc.freenode.net, #shownotes. ',
+        #'license': 'Apache 2.0',
+        #'licenseUrl': 'http://www.apache.org/licenses/LICENSE-2.0.html',
+        #'termsOfServiceUrl': 'http://helloreverb.com/terms/',
+        'title': 'Shownot.es API',
+    },
+    'doc_expansion': 'none',
+}
+
 
 # Logging
 # https://docs.djangoproject.com/en/1.7/topics/logging/

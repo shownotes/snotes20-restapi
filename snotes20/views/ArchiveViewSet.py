@@ -52,16 +52,13 @@ class ArchiveViewSet(viewsets.ViewSet):
     @list_route(methods=['POST'])
     def search(self, request):
         words = request.DATA['words']
-        print(words)
         search_argument_list_title = []
         search_argument_list_url = []
         for word in words:
             search_argument_list_title.append(Q(**{'title__icontains': word}))
             search_argument_list_url.append(Q(**{'url__icontains': word}))
 
-        print(reduce(operator.and_, search_argument_list_title))
-        print(reduce(operator.and_, search_argument_list_url))
-        lines = models.OSFNote.objects.filter(Q(reduce(operator.and_, search_argument_list_title)) | Q(reduce(operator.and_, search_argument_list_url)))\
+        lines = models.OSFNote.objects.filter(Q(reduce(operator.and_, search_argument_list_title)) |  Q(reduce(operator.and_, search_argument_list_url)))\
             .filter(state__publication__isnull=False)\
             .distinct('state__publication__episode')
 

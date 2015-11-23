@@ -4,25 +4,28 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 from rest_framework import routers
+from rest_framework_swagger import apidocview
 
-import snotes20.views as views
-
+import snotes20.views
+import statistic.views
 router = routers.DefaultRouter()
 
-router.register(r'auth', views.AuthViewSet, base_name='auth')
-router.register(r'users', views.UserViewSet, base_name='users')
-router.register(r'soonepisodes', views.SoonEpisodeViewSet, base_name='sonnepisodes')
-router.register(r'documents', views.DocumentViewSet, base_name='documents')
-router.register(r'importerlogs', views.ImporterLogViewSet, base_name='importerlogs')
-router.register(r'editors', views.EditorViewSet, base_name='editors')
-router.register(r'archive', views.ArchiveViewSet, base_name='archive')
-router.register(r'podcasts', views.PodcastViewSet, base_name='podcasts')
-router.register(r'pepisodes', views.PrivateEpisodeViewSet, base_name='pepsidoes')
+router.register(r'auth', snotes20.views.AuthViewSet, base_name='auth')
+router.register(r'users', snotes20.views.UserViewSet, base_name='users')
+router.register(r'soonepisodes', snotes20.views.SoonEpisodeViewSet, base_name='sonnepisodes')
+router.register(r'documents', snotes20.views.DocumentViewSet, base_name='documents')
+router.register(r'importerlogs', snotes20.views.ImporterLogViewSet, base_name='importerlogs')
+router.register(r'editors', snotes20.views.EditorViewSet, base_name='editors')
+router.register(r'archive', snotes20.views.ArchiveViewSet, base_name='archive')
+router.register(r'podcasts', snotes20.views.PodcastViewSet, base_name='podcasts')
+router.register(r'pepisodes', snotes20.views.PrivateEpisodeViewSet, base_name='pepsidoes')
+router.register(r'statistic', statistic.views.StatisticViewSet, base_name='statictics')
 
 urlpatterns = patterns('',
     url(r'^', include(router.urls)),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^docs/', include('rest_framework_swagger.urls')),
 )
 
 if settings.DEBUG:

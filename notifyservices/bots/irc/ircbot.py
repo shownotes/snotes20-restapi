@@ -28,7 +28,7 @@ class Ircbot(bot.SimpleBot):
             self.disconnect()
         if event.command == "RPL_ENDOFMOTD":
             if self.passwd:
-            	self.identify(self.passwd)
+                self.identify(self.passwd)
             LOGGER.info("IRC-Bot online")
             print("IRC-Bot online")
 
