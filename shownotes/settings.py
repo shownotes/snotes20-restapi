@@ -79,7 +79,7 @@ REST_FRAMEWORK = {
 SWAGGER_SETTINGS = {
     'exclude_namespaces': [],
     'api_version': '0.23',
-    'api_path': '/docs',
+    'api_path': '/',
     'enabled_methods': [
         'get',
         'post',

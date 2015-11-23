@@ -1,2 +1,6 @@
 from __future__ import absolute_import
-from celery import shared_task
+from shownotes.celery import app
+
+@app.task
+def add_test(x, y):
+    return(x + y)
