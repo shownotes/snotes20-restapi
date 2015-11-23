@@ -10,6 +10,7 @@ django-celery==3.1.17
 django-cors-headers==0.13
 django-extensions==1.4.6
 django-filter==0.8
+django-rest-swagger==0.3.4
 django-suit==0.2.13
 djangorestframework==2.4.4
 etherpad-lite==0.2.1
