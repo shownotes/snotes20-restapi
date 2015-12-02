@@ -1,3 +1,7 @@
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
 # ONLY set to True, if this is a development-config
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -43,6 +47,76 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+LOG_DIR = BASE_DIR+"/logs/"
+LOGGING = {
+    'version': 1,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(asctime)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console':{
+            'level': 'DEBUG',
+            'formatter': 'verbose',
+            'class': 'logging.StreamHandler',
+        },
+        'logfile-django': {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'formatter': 'simple',
+            'filename': LOG_DIR + 'django-exception.log',
+        },
+        'logfile-snotes20': {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'formatter': 'simple',
+            'filename': LOG_DIR + 'snotes20.log',
+        },
+        'logfile-notifyservices': {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'formatter': 'simple',
+            'filename': LOG_DIR + 'notifyservices.log',
+        },
+        'logfile-statistic': {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'formatter': 'simple',
+            'filename': LOG_DIR +'statistic.log',
+        },
+    },
+    'loggers': {
+        'snotes20.management.commands.importexternal': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'snotes20.management.commands.refreshdocstate': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django': {
+            'handlers': ['logfile-django'],
+            'level': 'DEBUG',
+        },
+        'snotes20': {
+            'handlers': ['logfile-snotes20'],
+            'level': 'DEBUG',
+        },
+        'notifyservices': {
+            'handlers': ['logfile-notifyservices'],
+            'level': 'DEBUG',
+        },
+        'statistic': {
+            'handlers': ['logfile-statistic'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
+
 
 # full path to a directory in which django can put static files (e.g. css for the admin-area), e.g. '/var/www/html/static'
 STATIC_ROOT = ''

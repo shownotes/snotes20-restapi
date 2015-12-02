@@ -4,7 +4,6 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 from rest_framework import routers
-from rest_framework_swagger import apidocview
 
 import snotes20.views
 import statistic.views

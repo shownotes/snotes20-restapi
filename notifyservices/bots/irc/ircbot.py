@@ -4,7 +4,7 @@ import logging
 from ircutils3 import bot
 from shownotes import settings
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class Ircbot(bot.SimpleBot):
@@ -29,7 +29,7 @@ class Ircbot(bot.SimpleBot):
         if event.command == "RPL_ENDOFMOTD":
             if self.passwd:
                 self.identify(self.passwd)
-            LOGGER.info("IRC-Bot online")
+            logger.info("IRC-Bot online")
             print("IRC-Bot online")
 
     def on_ctcp_version(self, event):
@@ -40,12 +40,12 @@ class Ircbot(bot.SimpleBot):
 
     def on_disconnect(self, event):
         if self.reconnects < 3:
-            LOGGER.info("reconnect...")
+            logger.info("reconnect...")
             time.sleep(6)
             self.reconnects += 1
             self.connect(self.server, port=self.port)
         else:
-            LOGGER.info("IRC-Bot offline")
+            logger.info("IRC-Bot offline")
             self.disconnect()
 
     def message(self,recv, message):
