@@ -14,10 +14,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='WordFrequency',
             fields=[
-                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
-                ('word', models.CharField(max_length=40, unique=True)),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
+                ('word', models.CharField(max_length=400)),
                 ('frequency', models.IntegerField()),
-                ('publication', models.ForeignKey(to='snotes20.Publication', related_name='publications')),
+                ('relativ_frequency', models.FloatField()),
+                ('episode', models.ForeignKey(to='snotes20.Episode', related_name='Episodes')),
+                ('podcast', models.ForeignKey(to='snotes20.Podcast', related_name='Podcasts')),
+                ('state', models.ForeignKey(to='snotes20.DocumentState', related_name='DocumentState')),
             ],
             options={
             },
@@ -25,6 +28,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='wordfrequency',
-            unique_together=set([('word', 'publication')]),
+            unique_together=set([('word', 'episode')]),
         ),
     ]

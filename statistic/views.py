@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from django.db.models import Sum
-
 from statistic.models import WordFrequency
 from statistic.serializers import WordFrequencySerializer
 
@@ -30,8 +29,7 @@ class StatisticViewSet(viewsets.ViewSet):
         else:
             top = 50
 
-        words = WordFrequency.objects.all().order_by('frequency').reverse()[:top]
-        # find a efficient way to summup all values in data
+        words = WordFrequency.objects.values('word').annotate(frequency=Sum('frequency')).order_by('frequency').reverse()
         logger.debug(words)
-        serializer = WordFrequencySerializer(words,many=True)
+        serializer = WordFrequencySerializer(words[:top],many=True)
         return Response(serializer.data)
