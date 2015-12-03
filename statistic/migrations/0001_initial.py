@@ -14,10 +14,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='WordFrequency',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
-                ('word', models.CharField(unique=True, max_length=40)),
-                ('count', models.IntegerField()),
-                ('publication', models.ForeignKey(related_name='publications', to='snotes20.Publication')),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('word', models.CharField(max_length=40, unique=True)),
+                ('frequency', models.IntegerField()),
+                ('publication', models.ForeignKey(to='snotes20.Publication', related_name='publications')),
             ],
             options={
             },

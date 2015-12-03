@@ -1,20 +1,16 @@
-from datetime import datetime
-
 from django.db import models
 
 # Create your models here.
-from django_extensions.db.fields import PostgreSQLUUIDField
-
-from snotes20.models import Publication, Podcast
+from snotes20.models import Episode
 
 
 class WordFrequency(models.Model):
-    word = models.CharField(max_length=40, blank=False, null=False, unique=True)
-    count = models.IntegerField(blank=False,null=False)
-    publication = models.ForeignKey(Publication, related_name="publications", blank=False, null=False)
+    word = models.CharField(max_length=400, blank=False, null=False)
+    frequency = models.IntegerField(blank=False,null=False)
+    episode = models.ForeignKey(Episode, related_name="Episodes", blank=False, null=False)
 
     def __str__(self):
-        return "{}".format(self.episode)
+        return "{} ({})".format(self.word, self.frequency)
 
     class Meta:
-        unique_together=('word','publication')
+        unique_together=('word','episode')
