@@ -44,17 +44,21 @@ DATABASES = {
     }
 }
 
-# full path to a directory in which django can put static files (e.g. css for the admin-area), e.g. '/var/www/html/static'
-STATIC_ROOT = ''
+
 # URL to where STATIC_ROOT can be accessed via the web, e.g. '/static/'
-STATIC_URL = ''
+STATIC_URL = '/static/'
+
+# full path to a directory in which django can put static files (e.g. css for the admin-area), e.g. '/var/www/html/static'
+STATIC_ROOT = BASE_DIR+STATIC_URL
 
 # sub-path in which the API is run, if any, e.g. '/api/'
 FORCE_SCRIPT_NAME = ''
 
 # full path to the media directory, where we store user-content like podcast-covers, e.g. '/var/www/html/media'
 # this must be accessible via the web and must match the setting in the frontends config.js
-MEDIA_ROOT = ''
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR+MEDIA_URL
+
 
 # set to True, if the API is run behind a reverse-proxy (e.g. apache on uberspace)
 USE_X_FORWARDED_HOST = False

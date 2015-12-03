@@ -182,6 +182,7 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP + (
 
 TEMPLATE_DIRS = (
     BASE_DIR + '/snotes20/emailtemplates/',
+    BASE_DIR + '/shownotes/templates/',
 )
 
 
@@ -203,11 +204,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR+STATIC_URL
+
+STATICFILES_DIRS = (
+    BASE_DIR + '/shownotes/static',
+)
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR+MEDIA_URL
 
 # custom user model
 AUTH_USER_MODEL = 'snotes20.NUser'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
 
