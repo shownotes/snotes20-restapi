@@ -13,7 +13,7 @@ class WordFrequency(models.Model):
     state = models.ForeignKey(DocumentState, related_name="DocumentState", blank=False, null=False)
 
     def __str__(self):
-        return "{} ({})".format(self.word, self.frequency)
+        return "{}".format(self.word)
 
     class Meta:
         unique_together=('word','episode')

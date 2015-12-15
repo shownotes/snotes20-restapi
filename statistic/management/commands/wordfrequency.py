@@ -34,7 +34,7 @@ punctuations.append('---')
 punctuations.append('...')
 
 class Command(BaseCommand):
-    help = 'Recalculate/Calculate word frequencies for database entries'
+    help = 'Calculate word frequencies for existing database entries'
 
     def handle(self, *args, **options):
 
@@ -44,33 +44,37 @@ class Command(BaseCommand):
             # Get last publication for episode
             last_publication = Publication.objects.filter(episode=episode).order_by('create_date').reverse()[:1]
 
-            # If any and there is no entry with the same state_id in WordFrequency
+            # If no publication to episode or an entry in WordFrequency with same stae_id exists
             if last_publication and not WordFrequency.objects.filter(state=last_publication[0].state).filter(episode=episode).exists():
 
-                # Get all shownotes for last publication
-                osfnotes = OSFNote.objects.filter(state_id=last_publication[0].state_id)
-                all_osfnotes = self.aggregate_shownotes(osfnotes)
+                if not WordFrequency.objects.filter(episode=episode).exists():
 
-                # Tokenize all words
-                episode_words = []
-                for sentence in all_osfnotes:
-                    word_tokens = word_tokenize(sentence.lower())
-                    word_tokens = [w for w in word_tokens if w not in punctuations]
-                    word_tokens = [w for w in word_tokens if w not in stop_words]
-                    [episode_words.append(w) for w in word_tokens]
-                all_words = FreqDist(episode_words)
+                        # Get all shownotes for last publication
+                        osfnotes = OSFNote.objects.filter(state_id=last_publication[0].state_id)
+                        all_osfnotes = self.aggregate_shownotes(osfnotes)
 
-                # Insert into database
-                for word in all_words:
-                    logger.debug("NEW Entry for " + str(episode) + " with word " + word)
-                    entry = WordFrequency(word=word,
-                                          frequency=all_words[word],
-                                          relativ_frequency=float(all_words[word]/len(all_words)),
-                                          episode=episode,
-                                          podcast=episode.podcast,
-                                          state=last_publication[0].state
-                    ).save()
+                        # Tokenize all words
+                        episode_words = []
+                        for sentence in all_osfnotes:
+                            word_tokens = word_tokenize(sentence.lower())
+                            word_tokens = [w for w in word_tokens if w not in punctuations]
+                            word_tokens = [w for w in word_tokens if w not in stop_words]
+                            [episode_words.append(w) for w in word_tokens]
+                        all_words = FreqDist(episode_words)
 
+                        # Insert into database
+                        for word in all_words:
+                            entry = WordFrequency(word=word,
+                                                  frequency=all_words[word],
+                                                  relativ_frequency=float(all_words[word]/len(all_words)),
+                                                  episode=episode,
+                                                  podcast=episode.podcast,
+                                                  state=last_publication[0].state
+                            ).save()
+                        logger.debug("NEW entry for " + str(episode))
+                else: # if any entry update to new state_id
+                    WordFrequency.objects.filter(episode=episode).update(state=last_publication[0].state)
+                    logger.debug("Update for " + str(episode))
 
     def aggregate_shownotes(self, osfnotes):
         all_notes = []

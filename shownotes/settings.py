@@ -232,6 +232,8 @@ IRC_SERVER = 'irc.freenode.net'
 IRC_PORT = 6667
 IRC_CHANNELS = "#shownotes"
 
+MAX_WORD_FREQUENCIES = 50
+
 # import deployment settings form local_settings.py
 try:
     from .local_settings import *
