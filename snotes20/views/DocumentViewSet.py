@@ -16,6 +16,7 @@ import snotes20.serializers as serializers
 import snotes20.models as models
 import snotes20.editors as editors
 import snotes20.contenttypes as contenttypes
+from statistic.tasks import update_wordfrequencies
 
 
 def find_doc_name(prefix, sep='-'):
@@ -411,6 +412,8 @@ class DocumentViewSet(viewsets.ViewSet):
                 pub.shownoters.add(*document.meta.shownoters.all())
 
                 episode.publicationrequests.all().delete()
+
+                update_wordfrequencies.delay(pub.episode, pub)
 
             return Response(status=status.HTTP_201_CREATED)
         elif request.method == 'GET':

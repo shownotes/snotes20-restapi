@@ -1,6 +1,5 @@
 from django.apps import AppConfig
 from django.db.models.signals import post_save, post_delete
-
 from etherpad_lite import EtherpadException
 
 import snotes20.editors as editors

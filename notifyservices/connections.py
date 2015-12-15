@@ -52,7 +52,6 @@ class NoftiyService(object):
         body = {'pk': pk, 'issuer': requester, 'podcast': podcast, 'episodenumber': episodenumber}
         self.publish("Publication", "publication.request", body)
 
-
     def publication(self, sender, instance, **kwargs):
         pk = str(instance.pk)
         creator = str(instance.creator.username)
@@ -62,14 +61,12 @@ class NoftiyService(object):
         body = {'pk': pk, 'issuer': creator , 'podcast': podcast, 'episodenumber': episodenumber}
         self.publish("Publication", "publication.new",body)
 
-
     def newdocument(self, sender, instance, **kwargs):
         pk = str(instance.pk)
         name = str(instance.name)
 
         body = {'pk': pk, 'name': name}
         self.publish("Document", "document.new", body)
-
 
     def publish(self, exchangename, routing_key, body):
         producer = self.conn.Producer(serializer='json')

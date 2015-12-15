@@ -11,8 +11,6 @@ from django.db.models import Sum
 from statistic.models import WordFrequency
 from statistic.serializers import WordFrequencySerializer
 
-from .tasks import add_test
-
 logger = logging.getLogger(__name__)
 
 
