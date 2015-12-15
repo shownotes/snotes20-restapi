@@ -29,16 +29,9 @@ class WordFrequencyViewSet(viewsets.ViewSet):
               paramType: query
             - name: word
               type: string
-              description: Reduce to a specifc word
+              description: Reduce to a specific word
               required: false
               paramType: query
-    retrieve:
-        parameters:
-            - name: pk
-              type: integer
-              description: Returns a specific database entry
-              required: true
-              paramType: form
     """
 
     def list(self, request):
@@ -63,3 +56,12 @@ class WordFrequencyViewSet(viewsets.ViewSet):
     #    serializer = WordFrequencySerializer(word)
     #    return Response(serializer.data)
 
+    """
+    retrieve:
+        parameters:
+            - name: pk
+              type: integer
+              description: Returns a specific database entry
+              required: true
+              paramType: form
+    """
