@@ -1,5 +1,10 @@
 # snotes20
 
+## Requirements
+- Ubuntu 14.04
+```sh
+sudo apt-get install libblas-dev liblapack-dev libatlas-base-dev gfortran
+```
 
 ## Setup
 ```sh
