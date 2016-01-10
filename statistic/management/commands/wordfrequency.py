@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 import logging
-from nltk import word_tokenize, FreqDist
-from nltk.corpus import stopwords
-import string
 
 from django.core.management.base import BaseCommand
 

@@ -37,7 +37,9 @@ class NoftiyService(object):
 
         # self.create_bounded_Exchange("Document")
         #Zwei Aufrufe von Save - Nachschauen wo
-        #post_save.connect(self.newdocument, sender=models.Document, weak=False, dispatch_uid='document_new')
+        # created true if exsists
+        # raw testen - loaddatacheck
+        #post_save.connect(self.newdocument, sender=models.Document,created, weak=False, dispatch_uid='document_new')
 
     def create_bounded_Exchange(self, exchangename):
         self.exchanges[exchangename] = Exchange(exchangename, 'direct', durable=True, channel=self.conn.default_channel)
