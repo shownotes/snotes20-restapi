@@ -3,7 +3,7 @@
 ## Requirements
 - Ubuntu 14.04
 ```sh
-sudo apt-get install libblas-dev liblapack-dev libatlas-base-dev gfortran
+sudo apt-get install libblas-dev liblapack-dev libatlas-base-dev gfortran libpq-dev
 ```
 
 ## Setup
