@@ -76,11 +76,6 @@ class WordListViewSet(viewsets.ViewSet):
               description: Reduce output to top x words
               required: false
               paramType: query
-            - name: word
-              type: string
-              description: Reduce to a specific word
-              required: false
-              paramType: query
     """
 
     def list(self, request):
@@ -92,10 +87,6 @@ class WordListViewSet(viewsets.ViewSet):
                 top = MAX_WORD_FREQUENCIES
         else:
             top = MAX_WORD_FREQUENCIES
-
-        if 'word' in request.QUERY_PARAMS:
-            word = request.QUERY_PARAMS['word'].lower()
-            words = words.filter(word=word)
 
         serializer = WordListSerializer(words[:top],many=True)
         return Response(serializer.data)
