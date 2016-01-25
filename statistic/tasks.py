@@ -13,7 +13,7 @@ from statistic.models import WordFrequency
 
 logger = logging.getLogger(__name__)
 
-stop_words = set(stopwords.words('german'))
+stop_words = set(stopwords.words(['german','english']))
 stop_words.add('http')
 stop_words.add('https')
 stop_words.add('dass')
