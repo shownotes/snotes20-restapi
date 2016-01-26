@@ -1,3 +1,4 @@
 from .TimeLinePodcastsViewSet import TimeLinePodcastsViewSet
 from .WordFrequencyViewSet import WordFrequencyViewSet
+from .WordListViewSet import WordListViewSet
 from .PodcastListViewSet import PodcastListViewSet
