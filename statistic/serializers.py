@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from statistic.models import WordFrequency
+from statistic.models import WordFrequency, SignificantPodcastWords
+
 
 class WordFrequencySerializer(serializers.ModelSerializer):
     word = serializers.CharField(source='word', max_length=400)
@@ -20,3 +21,10 @@ class WordListSerializer(serializers.ModelSerializer):
         print(obj['word'])
         return obj['word']
 
+class SignificantWordsSerializer(serializers.ModelSerializer):
+    word = serializers.CharField(max_length=400)
+    significance = serializers.FloatField(blank=False)
+
+    class Meta:
+        model = SignificantPodcastWords
+        fields = ('word','significance')
