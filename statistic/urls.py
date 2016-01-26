@@ -1,13 +1,13 @@
+import statistic.views
 from django.conf.urls import patterns, include, url
-from django.contrib import admin
-
 from rest_framework import routers
-
-from statistic.views import WordFrequencyViewSet
+import statistic.views
 
 statistic_router = routers.DefaultRouter()
-statistic_router.register(r'wordfrequency', WordFrequencyViewSet, base_name='statistic/wordfrequencies')
+statistic_router.register(r'wordfrequency', statistic.views.WordFrequencyViewSet, base_name='statistic/wordfrequencies')
+statistic_router.register(r'timeline-podcast', statistic.views.TimeLinePodcastsViewSet, base_name='statistic/timeline')
+statistic_router.register(r'podcast', statistic.views.PodcastListViewSet, base_name='statistic/archive')
 
 urlpatterns = patterns('statistic.views',
-    url(r'^', include(statistic_router.urls)),
-)
+                       url(r'^', include(statistic_router.urls)),
+                       )

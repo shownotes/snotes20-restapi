@@ -63,3 +63,5 @@ class WordFrequencyViewSet(viewsets.ViewSet):
               required: true
               paramType: form
     """
+
+
