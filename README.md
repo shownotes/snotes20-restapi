@@ -14,7 +14,13 @@ $ virtualenv -p /PATH/TO/python3.4 venv
 $ source venv/bin/activate
 $ pip install -r requirements.txt
 
-$  # Copy either of the 'shownotes/local_settings.py.tpl_*'-files to 'shownotes/local_settings.py' and adapt
+$ # Install nltk corpus
+$ python
+ >>> import nltk
+ >>> nltk.download()
+# Adjust directory and choose stopwords from corpora
+
+$ # Copy either of the 'shownotes/local_settings.py.tpl_*'-files to 'shownotes/local_settings.py' and adapt
 
 $ # Install and configure PostgreSql
 $ # Install and configure Etherpad

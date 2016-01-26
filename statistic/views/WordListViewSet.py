@@ -14,20 +14,15 @@ from statistic.serializers import WordFrequencySerializer, WordListSerializer
 logger = logging.getLogger(__name__)
 
 
-class WordFrequencyViewSet(viewsets.ViewSet):
+class WordListViewSet(viewsets.ViewSet):
     """
-    For listing or retrieving overall word frequencies.
+    For listing or retrieving overall word list.
     ---
     list:
         parameters:
             - name: top
               type: integer
               description: Reduce output to top x words
-              required: false
-              paramType: query
-            - name: word
-              type: string
-              description: Reduce to a specific word
               required: false
               paramType: query
     """
@@ -42,11 +37,7 @@ class WordFrequencyViewSet(viewsets.ViewSet):
         else:
             top = MAX_WORD_FREQUENCIES
 
-        if 'word' in request.QUERY_PARAMS:
-            word = request.QUERY_PARAMS['word'].lower()
-            words = words.filter(word=word)
-
-        serializer = WordFrequencySerializer(words[:top],many=True)
+        serializer = WordListSerializer(words[:top],many=True)
         return Response(serializer.data)
 
     #def retrieve(self, request, pk=None):

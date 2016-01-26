@@ -2,13 +2,20 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-# ONLY set to True, if this is a development-config
-DEBUG = False
-TEMPLATE_DEBUG = DEBUG
+# Key used for cryptographic signing of sessions and so on. Make it long (50+ chars), keep it secret.
+# https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-SECRET_KEY
+SECRET_KEY = 'barz'
 
-# hostnames from which the clients can access the API, e.g. 'shownot.es'
-# this is the hostname running the *frontend*
+# ONLY set to True, if this is a development-config
+DEBUG = True
+TEMPLATE_DEBUG = True
+
+# Key used for cryptographic signing of sessions and so on. Make it long (50+ chars), keep it secret.
+# https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-SECRET_KEY
 CORS_ORIGIN_WHITELIST = [
+    'localhost',
+    'localhost:9000',
+    'snotes20.com:9000',
 ]
 
 # full URL to the frontend
@@ -17,6 +24,7 @@ SITEURL = ''
 # hostnames on which the API can be accessed, e.g. 'shownot.es'
 # this is the hostname running the *backend*
 ALLOWED_HOSTS = [
+    'localhost'
 ]
 
 # Various editor-configs. At the moment there is only etherpad-like ('EP').
@@ -30,10 +38,6 @@ EDITORS = {
       'apiurl': ''
     }
 }
-
-# Key used for cryptographic signing of sessions and so on. Make it long (50+ chars), keep it secret.
-# https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-SECRET_KEY
-SECRET_KEY = ''
 
 # Database settings. Only postgresql is supported at the moment.
 # https://docs.djangoproject.com/en/dev/ref/databases/
