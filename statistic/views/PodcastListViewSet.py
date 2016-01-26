@@ -6,13 +6,13 @@ import snotes20.serializers as serializers
 
 class PodcastListViewSet(viewsets.ViewSet):
     """
-    For listing or retrieving podcasts from a specfic period.
+    For listing or retrieving podcasts from a specific period.
     ---
     list:
         parameters:
             - name: period
-              type: date
-              description: Reduce output to a specific periode
+              type: string MM-YYYY
+              description: required format = MM-YYYY. Filter to a specific period for timeline viewing
               required: false
               paramType: query
     """

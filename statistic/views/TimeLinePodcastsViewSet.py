@@ -5,7 +5,8 @@ from rest_framework.response import Response
 
 class TimeLinePodcastsViewSet(viewsets.ViewSet):
     """
-    For retrieving publication time line dates
+    For retrieving number of podcasts per period range (month).
+    The last 10 months are returned in descending order.
     ---
     """
     def list(self, request):
