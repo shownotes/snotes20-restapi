@@ -1,15 +1,12 @@
 import logging
 
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
 # Create your views here.
 from rest_framework.response import Response
 from rest_framework import viewsets
-from rest_framework.decorators import list_route
 from shownotes.settings import MAX_WORD_FREQUENCIES
 from django.db.models import Sum
 from statistic.models import WordFrequency
-from statistic.serializers import WordFrequencySerializer, WordListSerializer
+from statistic.serializers import WordListSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -39,18 +36,3 @@ class WordListViewSet(viewsets.ViewSet):
 
         serializer = WordListSerializer(words[:top],many=True)
         return Response(serializer.data)
-
-    #def retrieve(self, request, pk=None):
-    #    word = get_object_or_404(WordFrequency, pk=pk)
-    #    serializer = WordFrequencySerializer(word)
-    #    return Response(serializer.data)
-
-    """
-    retrieve:
-        parameters:
-            - name: pk
-              type: integer
-              description: Returns a specific database entry
-              required: true
-              paramType: form
-    """

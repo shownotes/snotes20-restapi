@@ -1,16 +1,21 @@
-import operator
-
-from django.conf import settings
-from django.db.models import Q
-from functools import reduce
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.decorators import list_route
 
 import snotes20.models as models
 import snotes20.serializers as serializers
 
 class PodcastListViewSet(viewsets.ViewSet):
+    """
+    For listing or retrieving podcasts from a specfic period.
+    ---
+    list:
+        parameters:
+            - name: period
+              type: date
+              description: Reduce output to a specific periode
+              required: false
+              paramType: query
+    """
     def list(self, request):
         period = ''
 

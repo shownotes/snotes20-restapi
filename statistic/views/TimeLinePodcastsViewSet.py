@@ -4,6 +4,10 @@ from rest_framework.response import Response
 
 
 class TimeLinePodcastsViewSet(viewsets.ViewSet):
+    """
+    For retrieving publication time line dates
+    ---
+    """
     def list(self, request):
 
         from django.db import connection
