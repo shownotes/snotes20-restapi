@@ -64,11 +64,11 @@ class Command(BaseCommand):
 
             response = tfidf.transform(freq_term_matrix)
 
-            #for feature in response.nonzero()[1]:
+            for feature in response.nonzero()[1]:
                 # build update / aysnc over task
-                #obj = SignificantPodcastWords(podcast=p, word=feature_names[feature], significance=response[0,feature])
+                obj = SignificantPodcastWords(podcast=p, word=feature_names[feature], significance=response[0,feature])
                 #print(".", end='')
-                #obj.save()
+                obj.save()
             #print("\n")
 
             # cosine similarity
