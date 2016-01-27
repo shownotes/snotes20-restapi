@@ -89,6 +89,21 @@ LOGGING = {
             'formatter': 'simple',
             'filename': LOG_DIR +'statistic.log',
         },
+        'logfile-wordfrequency': {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'formatter': 'simple',
+            'filename': LOG_DIR +'wordfrequency.log',
+        },
+        'logfile-update-statistics': {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'formatter': 'simple',
+            'filename': LOG_DIR +'update-statistics.log',
+        },
+        'logfile-statistics-tasks': {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'formatter': 'simple',
+            'filename': LOG_DIR +'statistics-tasks.log',
+        },
     },
     'loggers': {
         'snotes20.management.commands.importexternal': {
@@ -98,6 +113,21 @@ LOGGING = {
         },
         'snotes20.management.commands.refreshdocstate': {
             'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'statistic.management.commands.update-statistics': {
+            'handlers': ['logfile-update-statistics'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'statistic.management.commands.wordfrequency': {
+            'handlers': ['logfile-wordfrequency'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'statistic.tasks': {
+            'handlers': ['logfile-statistic-tasks'],
             'level': 'DEBUG',
             'propagate': True,
         },
