@@ -1,4 +1,7 @@
 from __future__ import absolute_import
+
+from django.db.models import Sum
+
 from shownotes.celery import app
 
 import logging
@@ -6,10 +9,11 @@ from nltk import word_tokenize, FreqDist
 from nltk.corpus import stopwords
 import string
 
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import TfidfTransformer
+from statistic.models import WordFrequency, SignificantPodcastWords, PodcastCosineSimilarity
 
-from snotes20.models import OSFNote
-from statistic.models import WordFrequency
+from snotes20.models import OSFNote, Podcast
 
 logger = logging.getLogger(__name__)
 
@@ -68,14 +72,46 @@ def update_wordfrequencies(episode, publication):
         all_words = FreqDist(episode_words)
 
         # Save entries
+        entries = []
         for word in all_words:
-            WordFrequency(word=word,
+            entries.append(WordFrequency(word=word,
                           frequency=all_words[word],
                           relativ_frequency=float(all_words[word]/len(all_words)),
                           episode=episode,
                           podcast=episode.podcast,
                           state=publication.state
-            ).save()
+            ))
+        WordFrequency.objects.bulk_create(entries)
         logger.debug("NEW entry for " + str(episode))
+
+    return True
+
+
+@app.task
+def update_podcast_statistics(i, podcasts, dictvectorizer, tfidf_matrix, tfidf):
+    feature_names = dictvectorizer.get_feature_names()
+    podcastx = Podcast.objects.get(pk=podcasts[i])
+
+    # calculate tfidf matrix for podcastx i
+    logger.debug('Verarbeite Publikationen des Podcasts: ', podcastx)
+    words = dict(WordFrequency.objects.filter(podcast=podcastx).values_list('word').annotate(frequency=Sum('frequency')).order_by('frequency').reverse())
+    freq_term_matrix = dictvectorizer.transform([words])
+    response = tfidf.transform(freq_term_matrix)
+
+    # generate significant words for podcastx i and write to database
+    entries = []
+    for feature in response.nonzero()[1]:
+        entries.append(SignificantPodcastWords(podcast=podcastx, word=feature_names[feature], significance=response[0,feature]))
+    SignificantPodcastWords.objects.bulk_create(entries)
+
+    # generate cosine similarity for podcastx i to all other matricies
+    sims = cosine_similarity(tfidf_matrix[i:i+1], tfidf_matrix)
+
+    # generate objects and write to database
+    entries = []
+    for j, sim in enumerate(sims.tolist()[0]):
+        podcasty = Podcast.objects.get(pk=podcasts[j])
+        entries.append(PodcastCosineSimilarity(podcastx=podcastx, podcasty=podcasty, cosine_sim=sim))
+    PodcastCosineSimilarity.objects.bulk_create(entries)
 
     return True
