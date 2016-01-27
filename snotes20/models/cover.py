@@ -72,4 +72,4 @@ class Cover(models.Model):
 
 
     def __str__(self):
-        return "{} ".format(self.original_url or self.file)
+        return "{}".format(self.file or self.original_url)
