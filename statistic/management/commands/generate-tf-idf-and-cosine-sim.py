@@ -9,6 +9,7 @@ from sklearn.decomposition import TruncatedSVD
 from snotes20.models import Episode, Podcast
 from statistic.models import WordFrequency, SignificantPodcastWords
 from django.core.management.base import BaseCommand
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 
@@ -40,30 +41,33 @@ class Command(BaseCommand):
         # train
         v = DictVectorizer(sparse=True)
         X = v.fit_transform(corpus)
+        matrix = tfidf.fit_transform(X)
+        #print(matrix)
+
+
+        #print("IDF:", tfidf.idf_) #weights
+        #for t in tfidf.idf_[:4]:
+        #    print(str(pname) + "\t\t\t\t" + str(t))
 
         # test
-        for podcast in podcasts:
+        for i, podcast in enumerate(podcasts):
             p = Podcast.objects.get(pk=podcast)
 
-            print('Teste auf Publikationen des Podcasts: ', p)
+            print('Verarbeite Publikationen des Podcasts: ', p, '(',str(i),')')
             print("== == == == == == == == == ==\n")
             words = dict(WordFrequency.objects.filter(podcast=podcast).values_list('word').annotate(frequency=Sum('frequency')).order_by('frequency').reverse())
             freq_term_matrix = v.transform([words])
-            #freq_term_matrix = v.transform([{'leipzig':0.22,'berlin':0.1,'podcast':0.2, 'folge':0.01,'tim':0.6}])
 
             # 0/1 vector with features in podcast
+            # save to table?
             #print(freq_term_matrix.todense())
 
             # get feature names
             feature_names = v.get_feature_names()
             #print(feature_names[:4])
 
-            tfidf.fit_transform(X)
-            #print("IDF:", tfidf.idf_) #weights
-            #for t in tfidf.idf_[:4]:
-            #    print(str(pname) + "\t\t\t\t" + str(t))
-
             response = tfidf.transform(freq_term_matrix)
+
 
             #print(response)
             #print(response.toarray())
@@ -75,9 +79,14 @@ class Command(BaseCommand):
             #        print(feature_names[col], ' - ', response[0, col])
             #print("== == == == == == == == == ==\n")
 
-            for feature in response.nonzero()[1]:
-                # build update / aysnc over task
-                obj = SignificantPodcastWords(podcast=p, word=feature_names[feature], significance=response[0,feature])
-                print(".", end='')
-                obj.save()
-            print("\n")
+            #for feature in response.nonzero()[1]:
+            #    # build update / aysnc over task
+            #    obj = SignificantPodcastWords(podcast=p, word=feature_names[feature], significance=response[0,feature])
+            #    print(".", end='')
+            #    obj.save()
+            #print("\n")
+
+            # cosine similarity
+            f = cosine_similarity(matrix[i:i+1], matrix)
+            print(f)
+            print("===============================\n")
