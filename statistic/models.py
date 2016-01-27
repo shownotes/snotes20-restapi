@@ -29,3 +29,15 @@ class SignificantPodcastWords(models.Model):
 
     class Meta:
         unique_together=('word','podcast')
+
+
+class PodcastCosineSimilarity(models.Model):
+    podcastx = models.ForeignKey(Podcast, related_name="Cosine_Podcast_x", blank=False, null=False)
+    podcasty = models.ForeignKey(Podcast, related_name="Cosine_Podcast_y", blank=False, null=False)
+    cosine_sim = models.FloatField(blank=False,null=False)
+
+    def __str__(self):
+        return "{}<->{}".format(self.podcastx, self.podcasty)
+
+    class Meta:
+        unique_together=('podcastx','podcasty')
