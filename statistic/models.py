@@ -37,7 +37,7 @@ class PodcastCosineSimilarity(models.Model):
     cosine_sim = models.FloatField(blank=False,null=False)
 
     def __str__(self):
-        return "{}<->{}".format(self.podcastx, self.podcasty)
+        return "{} <=> {}".format(self.podcastx, self.podcasty)
 
     class Meta:
         unique_together=('podcastx','podcasty')

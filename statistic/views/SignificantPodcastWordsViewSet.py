@@ -6,21 +6,21 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import viewsets
 from shownotes.settings import MAX_SIGIFICANT_WORDS
-from snotes20.models import Podcast, Episode
+from snotes20.models import Podcast
 from statistic.models import SignificantPodcastWords, WordFrequency
 from statistic.serializers import SignificantWordsSerializer
 
 logger = logging.getLogger(__name__)
 
-class SignificantWordsViewSet(viewsets.ViewSet):
+class SignificantPodcastWordsViewSet(viewsets.ViewSet):
     """
-    For listing or retrieving significant words list.
+    For listing or retrieving significant words list of a specific podcast.
     ---
     retrieve:
         parameters:
             - name: pk
               type: string
-              description: Podcast uuid
+              description: Podcast slug
               required: true
               paramType: path
             - name: top
@@ -34,7 +34,7 @@ class SignificantWordsViewSet(viewsets.ViewSet):
 
     """
     def retrieve(self, request, pk=None):
-        podcast = get_object_or_404(Podcast, pk=pk)
+        podcast = get_object_or_404(Podcast, slugs__slug=pk)
         words = SignificantPodcastWords.objects.filter(podcast=podcast).order_by('significance').reverse()
         p = WordFrequency.objects.filter(podcast=podcast).values('word').annotate(frequency=Sum('frequency')).order_by('frequency').reverse()
 
@@ -44,9 +44,6 @@ class SignificantWordsViewSet(viewsets.ViewSet):
                 top = MAX_SIGIFICANT_WORDS
         else:
             top = MAX_SIGIFICANT_WORDS
-
-        #print(words[:top])
-        #print(p[:top])
 
         serializer = SignificantWordsSerializer(words[:top],many=True)
         return Response(serializer.data)
