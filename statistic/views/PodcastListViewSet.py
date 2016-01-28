@@ -11,7 +11,7 @@ class PodcastListViewSet(viewsets.ViewSet):
     list:
         parameters:
             - name: period
-              type: string MM-YYYY
+              type: string
               description: required format = [M]M-YYYY. Filter to a specific period for timeline viewing
               required: false
               paramType: query
