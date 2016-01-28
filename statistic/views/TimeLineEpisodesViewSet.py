@@ -10,11 +10,20 @@ import snotes20.serializers as serializers
 
 class TimeLineEpisodesViewSet(viewsets.ViewSet):
     """
-    For retrieving number of episodes of a podcast per period range (month).
-    The last months are returned in descending order.
+    For retrieving number of episodes of a podcast per period range (month). The last months are returned in descending order.
     ---
+    retrieve:
+        parameters:
+            - name: pk
+              type: string
+              description: Filter to a specific podcast for timeline viewing
+              required: true
+              paramType: path
+        produces:
+        - application/json
     """
-    def list(self, request, pk=None):
+    def retrieve(self, request, pk=None):
+        podcast = get_object_or_404(models.Podcast, slugs__slug=pk)
 
         from django.db import connection
         cursor = connection.cursor()##
