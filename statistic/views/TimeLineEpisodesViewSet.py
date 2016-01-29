@@ -16,7 +16,7 @@ class TimeLineEpisodesViewSet(viewsets.ViewSet):
         parameters:
             - name: pk
               type: string
-              description: Filter to a specific podcast for timeline viewing
+              description: slug from a specific podcast for timeline viewing
               required: true
               paramType: path
         produces:
