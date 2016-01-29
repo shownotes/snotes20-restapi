@@ -8,6 +8,9 @@ class TimeLinePodcastsViewSet(viewsets.ViewSet):
     For retrieving number of podcasts per period range (month).
     The last 10 months are returned in descending order.
     ---
+    list:
+       produces:
+        - application/json
     """
     def list(self, request):
 
