@@ -5,3 +5,4 @@ from .SignificantPodcastWordsViewSet import SignificantPodcastWordsViewSet
 from .PodcastCosineSimilarityViewSet import PodcastCosineSimilarityViewSet
 from .PodcastListViewSet import PodcastListViewSet
 from .TimeLineEpisodesViewSet import TimeLineEpisodesViewSet
+from .EpisodeListViewSet import EpisodeListViewSet
