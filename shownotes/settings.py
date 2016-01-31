@@ -233,6 +233,7 @@ IRC_PORT = 6667
 IRC_CHANNELS = "#shownotes"
 
 MAX_WORD_FREQUENCIES = 50
+MAX_SIGIFICANT_WORDS = 30
 
 # import deployment settings form local_settings.py
 try:
