@@ -29,16 +29,23 @@ class EpisodeListViewSet(viewsets.ViewSet):
 
         period = ''
 
+        data = None
+
         if 'period' in request.QUERY_PARAMS:
             period = request.QUERY_PARAMS['period']
 
         try:
-            if not period:
-                pod = models.Podcast.objects.get(slugs__slug=pk)
-            else:
-                pod = models.Episode.objects.filter(podcast__slugs__slug=pk)
+            pod = models.Podcast.objects.get(slugs__slug=pk)
+            data = serializers.PodcastSerializer(pod).data
         except models.Podcast.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        data = serializers.PodcastSerializer(pod).data
-        return Response(pod)
+        if period:
+            period_parts = period.split("-")
+            filtered_episodes = []
+            for episode in data['episodes']:
+                if (int(period_parts[0]) == episode['create_date'].month and
+                    int(period_parts[1]) == episode['create_date'].year):
+                    filtered_episodes.append(episode)
+            data['episodes'] = filtered_episodes
+        return Response(data)
