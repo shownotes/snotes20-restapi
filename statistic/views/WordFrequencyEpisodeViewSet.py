@@ -6,27 +6,30 @@ from rest_framework import viewsets
 from shownotes.settings import MAX_WORD_FREQUENCIES
 from django.db.models import Sum
 from statistic.models import WordFrequency
-from statistic.serializers import WordListSerializer
+from statistic.serializers import WordFrequencySerializer
 
 logger = logging.getLogger(__name__)
 
 
-class WordListViewSet(viewsets.ViewSet):
+class WordFrequencyEpisodeViewSet(viewsets.ViewSet):
     """
-    For listing or retrieving word lists.
+    For listing or retrieving word frequencies for episodes.
     ---
-    list:
+    retrieve:
         parameters:
             - name: top
               type: integer
               description: Reduce output to top x words
               required: false
               paramType: query
+            - name: pk
+              type: string
+              description: Episode ID
+              required: true
+              paramType: path
     """
-
-    def list(self, request):
-        words = WordFrequency.objects.values('word').annotate(frequency=Sum('frequency')).order_by('frequency').reverse()
-
+    def retrieve(self, request, pk=None):
+        words = WordFrequency.objects.filter(episode=pk).values('word').annotate(frequency=Sum('frequency')).order_by('frequency').reverse()
         if 'top' in request.QUERY_PARAMS:
             top = int(request.QUERY_PARAMS['top'])
             if top > MAX_WORD_FREQUENCIES:
@@ -34,5 +37,9 @@ class WordListViewSet(viewsets.ViewSet):
         else:
             top = MAX_WORD_FREQUENCIES
 
-        serializer = WordListSerializer(words[:top],many=True)
+        if 'word' in request.QUERY_PARAMS:
+            word = request.QUERY_PARAMS['word'].lower()
+            words = words.filter(word=word)
+
+        serializer = WordFrequencySerializer(words[:top], many=True)
         return Response(serializer.data)

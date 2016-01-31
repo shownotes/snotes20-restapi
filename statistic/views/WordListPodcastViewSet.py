@@ -11,21 +11,25 @@ from statistic.serializers import WordListSerializer
 logger = logging.getLogger(__name__)
 
 
-class WordListViewSet(viewsets.ViewSet):
+class WordListPodcastViewSet(viewsets.ViewSet):
     """
     For listing or retrieving word lists.
     ---
-    list:
+    retrieve:
         parameters:
             - name: top
               type: integer
               description: Reduce output to top x words
               required: false
               paramType: query
+            - name: pk
+              type: string
+              description: Podcast slug
+              required: true
+              paramType: path
     """
-
-    def list(self, request):
-        words = WordFrequency.objects.values('word').annotate(frequency=Sum('frequency')).order_by('frequency').reverse()
+    def retrieve(self, request, pk=None):
+        words = WordFrequency.objects.filter(podcast__slugs__slug=pk).values('word').annotate(frequency=Sum('frequency')).order_by('frequency').reverse()
 
         if 'top' in request.QUERY_PARAMS:
             top = int(request.QUERY_PARAMS['top'])

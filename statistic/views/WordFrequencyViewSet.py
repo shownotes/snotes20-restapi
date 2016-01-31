@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class WordFrequencyViewSet(viewsets.ViewSet):
     """
-    For listing or retrieving overall word frequencies.
+    For listing or retrieving word frequencies for episodes.
     ---
     list:
         parameters:
@@ -27,36 +27,7 @@ class WordFrequencyViewSet(viewsets.ViewSet):
               description: Reduce to a specific word
               required: false
               paramType: query
-    retrieve:
-        parameters:
-            - name: top
-              type: integer
-              description: Reduce output to top x words
-              required: false
-              paramType: query
-            - name: pk
-              type: string
-              description: Podcast slug
-              required: true
-              paramType: path
     """
-    def retrieve(self, request, pk=None):
-        words = WordFrequency.objects.filter(podcast__slugs__slug=pk).values('word').annotate(frequency=Sum('frequency')).order_by('frequency').reverse()
-        if 'top' in request.QUERY_PARAMS:
-            top = int(request.QUERY_PARAMS['top'])
-            if top > MAX_WORD_FREQUENCIES:
-                top = MAX_WORD_FREQUENCIES
-        else:
-            top = MAX_WORD_FREQUENCIES
-
-        if 'word' in request.QUERY_PARAMS:
-            word = request.QUERY_PARAMS['word'].lower()
-            words = words.filter(word=word)
-
-        serializer = WordFrequencySerializer(words[:top], many=True)
-        return Response(serializer.data)
-
-
 
     def list(self, request):
         words = WordFrequency.objects.values('word').annotate(frequency=Sum('frequency')).order_by('frequency').reverse()
@@ -74,3 +45,4 @@ class WordFrequencyViewSet(viewsets.ViewSet):
 
         serializer = WordFrequencySerializer(words[:top], many=True)
         return Response(serializer.data)
+

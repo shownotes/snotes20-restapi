@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from rest_framework import routers
-from statistic.views import WordFrequencyViewSet, WordListViewSet, TimeLinePodcastsViewSet, PodcastListViewSet, TimeLineEpisodesViewSet, PodcastCosineSimilarityViewSet, SignificantPodcastWordsViewSet, EpisodeListViewSet
+from statistic.views import WordFrequencyViewSet, WordFrequencyPodcastViewSet, WordFrequencyEpisodeViewSet,  WordListPodcastViewSet, WordListEpisodeViewSet,WordListViewSet, TimeLinePodcastsViewSet, PodcastListViewSet, TimeLineEpisodesViewSet, PodcastCosineSimilarityViewSet, SignificantPodcastWordsViewSet, EpisodeListViewSet
 
 statistic_router = routers.DefaultRouter()
 statistic_router.register(r'podcast', PodcastListViewSet, base_name='statistic/podcast')
@@ -15,7 +15,12 @@ statistic_router.register(r'timeline/episode', TimeLineEpisodesViewSet, base_nam
 statistic_router.register(r'timeline/podcast', TimeLinePodcastsViewSet, base_name='statistic/timeline/podcast')
 
 statistic_router.register(r'wordlist', WordListViewSet, base_name='statistic/wordlist')
+statistic_router.register(r'wordlist/podcast', WordListPodcastViewSet, base_name='statistic/wordlist/podcast')
+statistic_router.register(r'wordlist/episode', WordListEpisodeViewSet, base_name='statistic/wordlist/episode')
+
 statistic_router.register(r'wordfrequency', WordFrequencyViewSet, base_name='statistic/wordfrequencies')
+statistic_router.register(r'wordfrequency/podcast', WordFrequencyPodcastViewSet, base_name='statistic/wordfrequencies/podcast')
+statistic_router.register(r'wordfrequency/episode', WordFrequencyEpisodeViewSet, base_name='statistic/wordfrequencies/episode')
 
 urlpatterns = patterns('statistic.views',
                        url(r'^', include(statistic_router.urls)),
