@@ -21,13 +21,12 @@ class TimeLinePodcastsViewSet(viewsets.ViewSet):
         cursor.execute(
                 'SELECT * '
                 'FROM ( '
-                ' SELECT COUNT(DISTINCT "snotes20_podcast"."id"), concat(date_part(\'month\', "snotes20_episode".create_date), \'-\', date_part(\'year\', "snotes20_episode".create_date))'
+                ' SELECT COUNT(DISTINCT "snotes20_podcast"."id"), concat(date_part(\'month\', "snotes20_episode".create_date), \'-\', date_part(\'year\', "snotes20_episode".create_date)) as filter_date'
                 '  FROM "snotes20_podcast"'
                 '  INNER JOIN "snotes20_episode" ON ("snotes20_podcast"."id" = "snotes20_episode"."podcast_id")'
                 '  INNER JOIN "snotes20_publication" ON ("snotes20_episode"."id" = "snotes20_publication"."episode_id")'
                 '  WHERE "snotes20_publication"."create_date" IS NOT NULL'
-                '  GROUP BY concat(date_part(\'month\', "snotes20_episode".create_date), \'-\', date_part(\'year\', "snotes20_episode".create_date)) '
-                '  ORDER BY concat(date_part(\'month\', "snotes20_episode".create_date), \'-\', date_part(\'year\', "snotes20_episode".create_date)) DESC '
+                '  GROUP BY filter_date '
                 ') AS subb '
                 'LIMIT 10; '
 

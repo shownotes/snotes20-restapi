@@ -30,14 +30,13 @@ class TimeLineEpisodesViewSet(viewsets.ViewSet):
 
         # Data retrieval operation - no commit required
         cursor.execute(
-                ' SELECT COUNT(DISTINCT "snotes20_episode"."id"), concat(date_part(\'month\', "snotes20_episode".create_date), \'-\', date_part(\'year\', "snotes20_episode".create_date))'
+                ' SELECT COUNT(DISTINCT "snotes20_episode"."id"), concat(date_part(\'month\', "snotes20_episode".create_date), \'-\', date_part(\'year\', "snotes20_episode".create_date)) as filter_date'
                 '  FROM "snotes20_episode"'
                 '  INNER JOIN "snotes20_podcast" ON ("snotes20_episode"."podcast_id" = "snotes20_podcast"."id")'
                 '  INNER JOIN "snotes20_podcastslug" ON ("snotes20_podcast"."id" = "snotes20_podcastslug"."podcast_id")'
                 '  WHERE "snotes20_episode"."create_date" IS NOT NULL'
                 '  AND "snotes20_podcastslug"."slug" = \'' + str(pk) + '\''
-                '  GROUP BY concat(date_part(\'month\', "snotes20_episode".create_date), \'-\', date_part(\'year\', "snotes20_episode".create_date)) '
-                '  ORDER BY concat(date_part(\'month\', "snotes20_episode".create_date), \'-\', date_part(\'year\', "snotes20_episode".create_date)) DESC ;'
+                '  GROUP BY filter_date ;'
 
         )
         return Response(cursor.fetchall())
