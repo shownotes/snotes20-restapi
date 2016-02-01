@@ -14,50 +14,60 @@ logger = logging.getLogger(__name__)
 
 class PodcastCosineSimilarityViewSet(viewsets.ViewSet):
     """
-    For listing or retrieving cosine similarities between all podcasts.
+    For listing or retrieving cosine similarities between podcasts.
     ---
-    list:
+    retrieve:
         parameters:
-            - name: threshold
-              type: float
-              description: Threshold for sigificance values
-              required: false
-              paramType: query
+            - name: pk
+              type: string
+              description: Podcast slug
+              required: true
+              paramType: path
         produces:
         - application/json
-        serializer: SignificantWordsSerializer
-
     """
-    def list(self, request):
+    def retrieve(self, request, pk=None):
+        pod = get_object_or_404(Podcast, slugs__slug=pk)
+        podcast_list = PodcastCosineSimilarity.objects.filter(podcastx=pod)
+
         nodes = []
         links = []
 
-        uniq_podcasts = Podcast.objects.filter(id__in=PodcastCosineSimilarity.objects.values_list('podcastx')).distinct()
+        if pod.cover:
+            nodes.append({"name":pod.slug, "coverfile":str(pod.cover)})
+        else:
+            nodes.append({"name":pod.slug, "coverfile":MEDIA_URL+"cover-placeholder.png"})
 
-        for podcast in uniq_podcasts:
-            # create nodes
-            if podcast.cover:
-                nodes.append({"name":podcast.slug, "coverfile":str(podcast.cover)})
-            else:
-                nodes.append({"name":podcast.slug, "coverfile":MEDIA_URL+"cover-placeholder.png"})
-
-        # create links
-        podcast_list = PodcastCosineSimilarity.objects.all()
         for item in podcast_list:
+            # create nodes
+            cover = item.podcasty.cover
+            if item.podcasty.cover:
+                nodes.append({"name":item.podcasty.slug, "coverfile":str(item.podcasty.cover)})
+            else:
+                nodes.append({"name":item.podcastx.slug, "coverfile":MEDIA_URL+"cover-placeholder.png"})
+
             links.append({"source":item.podcastx.slug, "target":item.podcasty.slug, "value":item.cosine_sim})
 
         #print(nodes)
         #print(links)
         objects = {"nodes":nodes,"links":links}
+        return Response(objects)
 
-        #if 'top' in request.QUERY_PARAMS:
-        #    top = int(request.QUERY_PARAMS['top'])
-        #    if top > MAX_SIGIFICANT_WORDS:
-        #        top = MAX_SIGIFICANT_WORDS
-        #else:
-        #    top = MAX_SIGIFICANT_WORDS
-        #
-        #serializer = SignificantWordsSerializer(words[:top],many=True)
-        #return Response(serializer.data)
+    def list(self, request):
+        nodes = []
+        links = []
+
+        uniq_podcasts = PodcastCosineSimilarity.objects.all().distinct()
+        for item in uniq_podcasts:
+            # create nodes
+            if item.podcastx.cover:
+                nodes.append({"name":item.podcastx.slug, "coverfile":str(item.podcastx.cover)})
+            else:
+                nodes.append({"name":item.podcastx.slug, "coverfile":MEDIA_URL+"cover-placeholder.png"})
+            links.append({"source":item.podcastx.slug, "target":item.podcasty.slug, "value":item.cosine_sim})
+
+        #print(nodes)
+        #print(links)
+        objects = {"nodes":nodes,"links":links}
 
         return Response(objects)

@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class WordFrequencyEpisodeViewSet(viewsets.ViewSet):
     """
-    For listing or retrieving word frequencies for episodes.
+    For retrieving word frequencies for episodes.
     ---
     retrieve:
         parameters:

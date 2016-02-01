@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class WordListPodcastViewSet(viewsets.ViewSet):
     """
-    For listing or retrieving word lists.
+    For listing or retrieving word lists of podcasts.
     ---
     retrieve:
         parameters:

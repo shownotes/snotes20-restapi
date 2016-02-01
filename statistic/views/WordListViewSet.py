@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class WordListViewSet(viewsets.ViewSet):
     """
-    For listing or retrieving word lists.
+    For listing a complete word lists over all shownotes.
     ---
     list:
         parameters:
