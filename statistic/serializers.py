@@ -23,8 +23,8 @@ class WordListSerializer(serializers.ModelSerializer):
 
 class SignificantWordsSerializer(serializers.ModelSerializer):
     word = serializers.CharField(max_length=400)
-    significance = serializers.FloatField(blank=False)
+    frequency = serializers.FloatField(source='significance', blank=False)
 
     class Meta:
         model = SignificantPodcastWords
-        fields = ('word','significance')
+        fields = ('word','frequency')
