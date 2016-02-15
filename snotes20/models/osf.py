@@ -1,8 +1,6 @@
 from django.db import models, transaction
 
-from osf import OSFLine
-
-from .DocumentState import DocumentState
+from .document import DocumentState
 
 
 class OSFDocumentState(DocumentState):

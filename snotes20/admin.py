@@ -4,14 +4,14 @@ import django.forms as forms
 import django.db.models as dmodels
 from django.core.urlresolvers import reverse
 
-from django_extensions.admin import ForeignKeyAutocompleteAdmin
-
 import snotes20.models as models
 from snotes20.reverseadmins import ReverseOneToOneAdmin, ReverseOneToOneAdminForm
+
 
 class PodcastSlugInline(admin.TabularInline):
     model = models.PodcastSlug
     extra = 0
+
 
 class EpisodeInline(admin.TabularInline):
     model = models.Episode
@@ -40,6 +40,7 @@ class MumInline(admin.TabularInline):
     model = models.Podcast.mums.through
     extra = 0
 
+
 @admin.register(models.Podcast)
 class PodcastAdmin(admin.ModelAdmin):
     inlines = [PodcastSlugInline, EpisodeInline, MumInline]
@@ -66,6 +67,7 @@ class PodcastAdmin(admin.ModelAdmin):
         }),
     )
 
+
 @admin.register(models.ChatMessage)
 class ChatMessageAdmin(admin.ModelAdmin):
     list_display = ('document', 'issuer', 'date')
@@ -80,6 +82,7 @@ class PublicationInline(admin.StackedInline):
 
     def has_add_permission(self, request):
         return False
+
 
 @admin.register(models.Episode)
 class EpisodeAdmin(admin.ModelAdmin):
@@ -110,13 +113,16 @@ class PodcasterAdmin(admin.ModelAdmin):
     list_display = ('name',)
     list_filter =  ('name',)
 
+
 @admin.register(models.Shownoter)
 class ShownoterAdmin(admin.ModelAdmin):
     search_fields = ('name', 'user__username')
 
+
 class RawPodcasterInline(admin.TabularInline):
     model = models.RawPodcaster
     extra = 0
+
 
 @admin.register(models.DocumentMeta)
 class DocumentMetaAdmin(admin.ModelAdmin):
@@ -131,15 +137,18 @@ class OSFNoteInline(admin.TabularInline):
     can_delete = False
     extra = 0
 
+
 @admin.register(models.OSFDocumentState)
 class DocumentStateAdmin(admin.ModelAdmin):
     fields = ('date',)
     inlines = [OSFNoteInline,]
 
+
 @admin.register(models.OSFTag)
 class DocumentStateAdmin(admin.ModelAdmin):
     fields = ('name', 'short', 'description')
     list_display = ('name','short', 'description')
+
 
 class DocumentAdminForm(ReverseOneToOneAdminForm):
     rels = ('episode',)
@@ -149,6 +158,7 @@ class DocumentAdminForm(ReverseOneToOneAdminForm):
         model = models.Document
         exclude = ('state', 'raw_state')
 
+
 @admin.register(models.Document)
 class DocumentAdmin(ReverseOneToOneAdmin):
     form = DocumentAdminForm
@@ -157,11 +167,13 @@ class DocumentAdmin(ReverseOneToOneAdmin):
     list_filter =  ('name', 'editor', 'creator', 'edit_date', 'access_date', 'create_date')
     rels = (('episode', 'document'),)
 
+
 @admin.register(models.Publication)
 class PublicationAdmin(admin.ModelAdmin):
     list_display = ('episode', 'creator', 'comment', 'create_date')
     list_filter =  ('episode', 'creator', 'comment', 'create_date')
     #search_fields = ('title', 'creator', 'number')
+
 
 @admin.register(models.PublicationRequest)
 class PublicationRequestAdmin(admin.ModelAdmin):
@@ -233,13 +245,13 @@ class NUserSocialTypeAdmin(admin.ModelAdmin):
     pass
 
 
-
 class ImporterJobLogInline(admin.StackedInline):
     model = models.ImporterJobLog
     extra = 0
 
     fields = ('name', ('created', 'deleted', 'skipped', 'updated'), 'runtime', ('starttime', 'endtime'), ('succeeded', 'error'))
     readonly_fields = ('runtime',)
+
 
 @admin.register(models.ImporterDatasourceLog)
 class ImporterDatasourceLogAdmin(admin.ModelAdmin):
@@ -277,3 +289,18 @@ class CoverAdmin(admin.ModelAdmin):
     fields = ('creator', 'create_date', 'file')
     list_display = ('__str__', 'creator','create_date')
     list_filter = ('creator','create_date')
+
+
+@admin.register(models.DocumentStateError)
+class DocumentStateErrorAdmin(admin.ModelAdmin):
+    fields = ('state', 'line', 'message',)
+    readonly_fields = ('state','line','message')
+    list_display = ('document_name', 'line', 'message')
+    search_fields = ('message',)
+
+    def queryset(self, request):
+        documents = super(DocumentStateErrorAdmin, self).queryset(request)
+        return documents.filter(state__document__isnull=False)
+
+    def document_name(self, instance):
+        return models.Document.objects.get(state=instance.state)

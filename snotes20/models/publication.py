@@ -3,10 +3,9 @@ from django.conf import settings
 
 from django_extensions.db.fields import PostgreSQLUUIDField
 
-from .podcast import Episode
 from .showoter import Shownoter
-from .state import DocumentState, TextDocumentState
-
+from .podcast import Episode
+from .document import DocumentState, TextDocumentState
 
 class Podcaster(models.Model):
     id = PostgreSQLUUIDField(primary_key=True, auto=True)
