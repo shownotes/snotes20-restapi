@@ -8,6 +8,7 @@ billiard==3.3.0.21
 celery==3.1.19
 django-celery==3.1.17
 django-cors-headers==0.13
+django-debug-toolbar==1.4
 django-extensions==1.4.6
 django-filter==0.8
 django-rest-swagger==0.3.4
@@ -27,3 +28,4 @@ rabbitpy==0.23.0
 requests==2.5.1
 rules==0.3
 six==1.10.0
+sqlparse==0.1.18
