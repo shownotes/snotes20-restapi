@@ -19,6 +19,6 @@ class Command(BaseCommand):
         documents = Document.objects.filter(Q(raw_state_id__in=header_notes) | Q(raw_state_id__in=pirate_notes))
         for doc in documents:
             if Publication.objects.filter(episode__document=doc).exists():
-                print('(Veröffentlicht)\t' + SITEURL+'/doc/'+doc.name)
+                print('(Veröffentlicht)\t' + SITEURL+'/doc/'+doc.name+'/edit/')
             else:
-                print('\t\t\t'+SITEURL+'/doc/'+doc.name)
+                print('\t\t\t\t\t'+SITEURL+'/doc/'+doc.name+'/edit/')
